@@ -10,14 +10,17 @@ namespace RentalOfPremises.Domain.Models
     public class Premise
     {
         public Guid Id { get; set; }
-        public string Address { get; set; }
-        public int CoutOfRooms { get; set; }
-        public double Area { get; set; }
+        public string Address { get; set; } = string.Empty;
+        public int CoutOfRooms { get; set; } = 0;
+        public double Area { get; set; } = 0;
 
         //владелец помещения
         public User Owner { get; set; }
         public Guid OwnerId { get; set; }
 
+        //тот кто снимает
+        public User Renter { get; set; }
+        public Guid RenterId { get; set; }
 
         //объявление о сдаче этого помещения
         public Advert? Advert { get; set; }

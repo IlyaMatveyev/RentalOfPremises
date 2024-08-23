@@ -9,11 +9,11 @@ namespace RentalOfPremises.Domain.Models
     public class Response
     {
         public Guid Id { get; set; }
-        public string Message { get; set; }
+        public string Message { get; set; } = string.Empty;
 
         //тот кто откликнулся
-        public User User { get; set; }
-        public Guid UserId { get; set; }
+        public User? Sender { get; set; }
+        public Guid SenderId { get; set; }
 
         //объявление
         public Advert Advert { get; set; }

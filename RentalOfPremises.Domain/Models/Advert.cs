@@ -10,8 +10,8 @@ namespace RentalOfPremises.Domain.Models
     public class Advert 
     {
         public Guid Id { get; set; }
-        public string Label { get; set; }
-        public string Description { get; set; }
+        public string Label { get; set; } = string.Empty;
+        public string Description { get; set; } = string.Empty;
 
         public List<Response> Responses { get; set; } //список откликов
 
