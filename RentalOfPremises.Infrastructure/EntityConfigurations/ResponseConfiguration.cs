@@ -14,11 +14,15 @@ namespace RentalOfPremises.Infrastructure.EntityConfigurations
 
             //отправители
             builder.HasOne(r => r.Sender)
-                .WithMany(s => s.Responses);
+                .WithMany(s => s.Responses)
+                .HasForeignKey(r => r.SenderId)
+                .OnDelete(DeleteBehavior.NoAction); //если Sender удалится, то БД не будет производить никаких действий над откликами
 
             //объявление
             builder.HasOne(r => r.Advert)
-                .WithMany(a => a.Responses);
+                .WithMany(a => a.Responses)
+                .HasForeignKey(r => r.AdvertId);
+                //.OnDelete(DeleteBehavior.Cascade); //если объявление удалят, то все отклики на него удалятся
         }
     }
 }

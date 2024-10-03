@@ -1,3 +1,6 @@
+using Microsoft.EntityFrameworkCore;
+using RentalOfPremises.Infrastructure;
+
 namespace RentalOfPremises.API
 {
     public class Program
@@ -12,6 +15,12 @@ namespace RentalOfPremises.API
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+
+
+            //DB context
+            builder.Services.AddDbContext<IRentalOfPremisesDbContext, RentalOfPremisesDbContext>(
+                options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
 
             var app = builder.Build();
 

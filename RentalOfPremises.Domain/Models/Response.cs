@@ -13,7 +13,7 @@ namespace RentalOfPremises.Domain.Models
 
         //тот кто откликнулся
         public User? Sender { get; set; }
-        public Guid SenderId { get; set; }
+        public Guid? SenderId { get; set; }
 
         //объявление
         public Advert Advert { get; set; }

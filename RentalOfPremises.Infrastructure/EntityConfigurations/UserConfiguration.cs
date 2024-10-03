@@ -13,6 +13,7 @@ namespace RentalOfPremises.Infrastructure.EntityConfigurations
             builder.Property(n => n.UserName).IsRequired().HasMaxLength(16);
             builder.Property(e => e.Email).IsRequired().HasMaxLength(256);
             builder.Property(p => p.PasswordHash).IsRequired().HasMaxLength(256);
+            builder.Property(u => u.IsBanned).IsRequired();
 
             //связь с помещениями (во владении)
             builder.HasMany(u => u.PersonalPremises)

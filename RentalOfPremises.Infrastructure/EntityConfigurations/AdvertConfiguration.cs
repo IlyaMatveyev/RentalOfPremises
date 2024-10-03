@@ -18,15 +18,19 @@ namespace RentalOfPremises.Infrastructure.EntityConfigurations
             //отклики
             builder.HasMany(a => a.Responses)
                 .WithOne(r => r.Advert)
-                .HasForeignKey(r => r.AdvertId);
+                .HasForeignKey(r => r.AdvertId)
+                .OnDelete(DeleteBehavior.Cascade); //удаление Advert вызывает удаление Responses
 
             //владелец
             builder.HasOne(a => a.Owner)
-                .WithMany(r => r.Adverts);
+                .WithMany(r => r.Adverts)
+                .HasForeignKey(a => a.OwnerId)
+                .OnDelete(DeleteBehavior.Cascade); //если владелец удалён, то его Adverts тоже удаляются
 
-            //помещение
-            builder.HasOne(a => a.Premise)
-                .WithOne(p => p.Advert);
+            //помещение (эта связь уже прописана )
+            /*builder.HasOne(a => a.Premise)
+                .WithOne(p => p.Advert)
+                .HasForeignKey<Advert>(a => a.PremiseId);*/
         }
     }
 }

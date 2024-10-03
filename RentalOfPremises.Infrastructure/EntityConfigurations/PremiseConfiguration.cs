@@ -14,18 +14,24 @@ namespace RentalOfPremises.Infrastructure.EntityConfigurations
             builder.Property(p => p.CoutOfRooms).IsRequired();
             builder.Property(p => p.Area).IsRequired();
 
+
             //связь с владельцем
             builder.HasOne(p => p.Owner)
-                .WithMany(u => u.PersonalPremises);
+                .WithMany(u => u.PersonalPremises)
+                .HasForeignKey(p => p.OwnerId)
+                .OnDelete(DeleteBehavior.Restrict); //удаление владельца запрещено если у него есть помещения
 
             //связь с арендатором
             builder.HasOne(p => p.Renter)
-                .WithMany(u => u.RentedPremises);
+                .WithMany(u => u.RentedPremises)
+                .HasForeignKey(p => p.RenterId) 
+                .OnDelete(DeleteBehavior.SetNull); //при удалении арендатора, он заменияется на null. Помещение не удаляется
 
-            //связь с объявлением
+            //связь с объявлением !!!!!!!!
             builder.HasOne(p => p.Advert)
-                .WithOne(a => a.Premise);
-
+                .WithOne(a => a.Premise)
+                .HasForeignKey<Advert>(a => a.PremiseId) //для 1:1 это нужно прописать, не смотря на то что Premise не имеет внешнего ключа
+                .OnDelete(DeleteBehavior.Cascade); //В связях 1:1 OnDelete работает по другому!!! Если удалить Premise, то удалится и Advert!!!
 
         }
     }

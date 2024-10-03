@@ -14,6 +14,7 @@ namespace RentalOfPremises.Domain.Models
         public string Email { get; set; } = string.Empty;
         public string PasswordHash { get; set; } = string.Empty;
 
+        public bool IsBanned { get; set; } = false;
 
         //помещения во владении пользователя
         public List<Premise>? PersonalPremises { get; set; }

@@ -13,7 +13,7 @@ namespace RentalOfPremises.Domain.Models
         public string Label { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;
 
-        public List<Response> Responses { get; set; } //список откликов
+        public List<Response>? Responses { get; set; } //список откликов
 
         //владелец
         public Guid OwnerId { get; set; }

@@ -14,16 +14,16 @@ namespace RentalOfPremises.Domain.Models
         public int CoutOfRooms { get; set; } = 0;
         public double Area { get; set; } = 0;
 
+
         //владелец помещения
         public User Owner { get; set; }
         public Guid OwnerId { get; set; }
 
         //тот кто снимает
-        public User Renter { get; set; }
-        public Guid RenterId { get; set; }
+        public User? Renter { get; set; }
+        public Guid? RenterId { get; set; }
 
         //объявление о сдаче этого помещения
         public Advert? Advert { get; set; }
-        public Guid AdvertId { get; set; }
     }
 }
