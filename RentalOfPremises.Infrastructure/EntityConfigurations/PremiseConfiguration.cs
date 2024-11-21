@@ -1,12 +1,13 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using RentalOfPremises.Domain.Models;
+using RentalOfPremises.Infrastructure.Entities;
 
 namespace RentalOfPremises.Infrastructure.EntityConfigurations
 {
-    public class PremiseConfiguration : IEntityTypeConfiguration<Premise>
+    public class PremiseConfiguration : IEntityTypeConfiguration<PremiseEntity>
     {
-        public void Configure(EntityTypeBuilder<Premise> builder)
+        public void Configure(EntityTypeBuilder<PremiseEntity> builder)
         {
             builder.HasKey(x => x.Id);
 
@@ -30,7 +31,7 @@ namespace RentalOfPremises.Infrastructure.EntityConfigurations
             //связь с объявлением !!!!!!!!
             builder.HasOne(p => p.Advert)
                 .WithOne(a => a.Premise)
-                .HasForeignKey<Advert>(a => a.PremiseId) //для 1:1 это нужно прописать, не смотря на то что Premise не имеет внешнего ключа
+                .HasForeignKey<AdvertEntity>(a => a.PremiseId) //для 1:1 это нужно прописать, не смотря на то что Premise не имеет внешнего ключа
                 .OnDelete(DeleteBehavior.Cascade); //В связях 1:1 OnDelete работает по другому!!! Если удалить Premise, то удалится и Advert!!!
 
         }

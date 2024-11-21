@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using RentalOfPremises.Infrastructure;
+using RentalOfPremises.Infrastructure.MSSQLServer;
 
 #nullable disable
 
@@ -17,10 +17,10 @@ namespace RentalOfPremises.Infrastructure.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "6.0.33")
+                .HasAnnotation("ProductVersion", "7.0.20")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
-            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
+            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
             modelBuilder.Entity("RentalOfPremises.Domain.Models.Advert", b =>
                 {
@@ -51,7 +51,7 @@ namespace RentalOfPremises.Infrastructure.Migrations
                     b.HasIndex("PremiseId")
                         .IsUnique();
 
-                    b.ToTable("Adverts");
+                    b.ToTable("Adverts", (string)null);
                 });
 
             modelBuilder.Entity("RentalOfPremises.Domain.Models.Premise", b =>
@@ -83,7 +83,7 @@ namespace RentalOfPremises.Infrastructure.Migrations
 
                     b.HasIndex("RenterId");
 
-                    b.ToTable("Premises");
+                    b.ToTable("Premises", (string)null);
                 });
 
             modelBuilder.Entity("RentalOfPremises.Domain.Models.Response", b =>
@@ -109,7 +109,7 @@ namespace RentalOfPremises.Infrastructure.Migrations
 
                     b.HasIndex("SenderId");
 
-                    b.ToTable("Responses");
+                    b.ToTable("Responses", (string)null);
                 });
 
             modelBuilder.Entity("RentalOfPremises.Domain.Models.User", b =>
@@ -126,6 +126,9 @@ namespace RentalOfPremises.Infrastructure.Migrations
                     b.Property<bool>("IsBanned")
                         .HasColumnType("bit");
 
+                    b.Property<bool>("IsEmailConfirmed")
+                        .HasColumnType("bit");
+
                     b.Property<string>("PasswordHash")
                         .IsRequired()
                         .HasMaxLength(256)
@@ -138,7 +141,7 @@ namespace RentalOfPremises.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Users");
+                    b.ToTable("Users", (string)null);
                 });
 
             modelBuilder.Entity("RentalOfPremises.Domain.Models.Advert", b =>

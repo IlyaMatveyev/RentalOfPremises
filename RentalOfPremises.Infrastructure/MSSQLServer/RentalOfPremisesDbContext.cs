@@ -1,8 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using RentalOfPremises.Domain.Models;
+using RentalOfPremises.Infrastructure.Entities;
 using RentalOfPremises.Infrastructure.EntityConfigurations;
 
-namespace RentalOfPremises.Infrastructure
+namespace RentalOfPremises.Infrastructure.MSSQLServer
 {
     public class RentalOfPremisesDbContext : DbContext, IRentalOfPremisesDbContext
     {
@@ -10,10 +11,10 @@ namespace RentalOfPremises.Infrastructure
         {
         }
 
-        public DbSet<User> Users { get; set; }
-        public DbSet<Premise> Premises { get; set; }
-        public DbSet<Response> Responses { get; set; }
-        public DbSet<Advert> Adverts { get; set; }
+        public DbSet<UserEntity> Users { get; set; }
+        public DbSet<PremiseEntity> Premises { get; set; }
+        public DbSet<ResponseEntity> Responses { get; set; }
+        public DbSet<AdvertEntity> Adverts { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -24,6 +25,17 @@ namespace RentalOfPremises.Infrastructure
             modelBuilder.ApplyConfiguration(new ResponseConfiguration());
 
             base.OnModelCreating(modelBuilder);
+        }
+
+
+        public async Task SaveChangesAsync()
+        {
+            await base.SaveChangesAsync();
+        }
+
+        public async Task SaveChangesAsync(CancellationToken cancellationToken)
+        {
+            await base.SaveChangesAsync(cancellationToken);
         }
     }
 }

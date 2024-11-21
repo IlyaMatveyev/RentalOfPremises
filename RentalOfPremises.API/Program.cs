@@ -1,5 +1,5 @@
 using Microsoft.EntityFrameworkCore;
-using RentalOfPremises.Infrastructure;
+using RentalOfPremises.Infrastructure.MSSQLServer;
 
 namespace RentalOfPremises.API
 {

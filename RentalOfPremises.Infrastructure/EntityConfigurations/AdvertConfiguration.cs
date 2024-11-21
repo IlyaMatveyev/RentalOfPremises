@@ -1,12 +1,13 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using RentalOfPremises.Domain.Models;
+using RentalOfPremises.Infrastructure.Entities;
 
 namespace RentalOfPremises.Infrastructure.EntityConfigurations
 {
-    public class AdvertConfiguration : IEntityTypeConfiguration<Advert>
+    public class AdvertConfiguration : IEntityTypeConfiguration<AdvertEntity>
     {
-        public void Configure(EntityTypeBuilder<Advert> builder)
+        public void Configure(EntityTypeBuilder<AdvertEntity> builder)
         {
             builder.HasKey(x => x.Id);
 

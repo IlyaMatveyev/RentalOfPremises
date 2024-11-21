@@ -1,12 +1,13 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using RentalOfPremises.Domain.Models;
+using RentalOfPremises.Infrastructure.Entities;
 
 namespace RentalOfPremises.Infrastructure.EntityConfigurations
 {
-    public class UserConfiguration : IEntityTypeConfiguration<User>
+    public class UserConfiguration : IEntityTypeConfiguration<UserEntity>
     {
-        public void Configure(EntityTypeBuilder<User> builder)
+        public void Configure(EntityTypeBuilder<UserEntity> builder)
         {
             builder.HasKey(x => x.Id);
 
@@ -14,6 +15,7 @@ namespace RentalOfPremises.Infrastructure.EntityConfigurations
             builder.Property(e => e.Email).IsRequired().HasMaxLength(256);
             builder.Property(p => p.PasswordHash).IsRequired().HasMaxLength(256);
             builder.Property(u => u.IsBanned).IsRequired();
+            builder.Property(u => u.IsEmailConfirmed).IsRequired();
 
             //связь с помещениями (во владении)
             builder.HasMany(u => u.PersonalPremises)

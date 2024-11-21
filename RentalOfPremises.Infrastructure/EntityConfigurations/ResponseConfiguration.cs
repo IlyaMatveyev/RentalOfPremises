@@ -1,12 +1,13 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using RentalOfPremises.Domain.Models;
+using RentalOfPremises.Infrastructure.Entities;
 
 namespace RentalOfPremises.Infrastructure.EntityConfigurations
 {
-    public class ResponseConfiguration : IEntityTypeConfiguration<Response>
+    public class ResponseConfiguration : IEntityTypeConfiguration<ResponseEntity>
     {
-        public void Configure(EntityTypeBuilder<Response> builder)
+        public void Configure(EntityTypeBuilder<ResponseEntity> builder)
         {
             builder.HasKey(x => x.Id);
 
