@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RentalOfPremises.Domain.Interfaces
+namespace RentalOfPremises.Application.Interfaces
 {
     public interface IUserRepository
     {
@@ -14,6 +14,8 @@ namespace RentalOfPremises.Domain.Interfaces
         public Task<Guid> Delete(Guid id);
         public Task<IEnumerable<User>> ReadAll();
         public Task<User?> ReadById(Guid id);
+
+        public Task<User?> ReadByEmail(string email);
 
     }
 }

@@ -1,32 +1,34 @@
-﻿using Microsoft.EntityFrameworkCore;
-using RentalOfPremises.Domain.Interfaces;
+﻿using Mapster;
+using MapsterMapper;
+using Microsoft.EntityFrameworkCore;
+using RentalOfPremises.Application.Interfaces;
 using RentalOfPremises.Domain.Models;
+using RentalOfPremises.Infrastructure.Entities;
 using RentalOfPremises.Infrastructure.MSSQLServer;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RentalOfPremises.Infrastructure.Repositories
 {
     public class UserRepository : IUserRepository
     {
         private readonly IRentalOfPremisesDbContext _dbContext;
-        public UserRepository(IRentalOfPremisesDbContext dbContext)
+        private readonly IMapper _mapper;
+        public UserRepository(IRentalOfPremisesDbContext dbContext, IMapper mapper)
         {
             _dbContext = dbContext;
+            _mapper = mapper;
         }
 
 
         public async Task<Guid> Create(User user)
         {
             //TODO: тут или в сервисе скорее всего нужно будет прописать нормальную работу с регистрацией пользователя
-            
-            //TODO: возможно правильнее здесь сделать маппинг в UserEntity и в целом на уровне работы с БД использовать отдельные модели Entity
 
-            /*await _dbContext.Users.AddAsync(user);
-            await _dbContext.SaveChangesAsync();*/
+            //маппинг
+            var userEntity = _mapper.Map<User, UserEntity>(user);
+
+
+            await _dbContext.Users.AddAsync(userEntity);
+            await _dbContext.SaveChangesAsync();
 
             return user.Id;
         }
@@ -42,18 +44,26 @@ namespace RentalOfPremises.Infrastructure.Repositories
 
         public async Task<IEnumerable<User>> ReadAll()
         {
-            /*return await _dbContext.Users
+            return await _dbContext.Users
                 .AsNoTracking()
-                .ToListAsync();*/
-            return new List<User>();
+                .ProjectToType<User>()  //маппинг из UserEntity в User
+                .ToListAsync();         //материализация объектов (IQueryable -> IEnumirable)
+        }
+
+        public async Task<User?> ReadByEmail(string email)
+        {
+            return await _dbContext.Users
+                .AsNoTracking()
+                .ProjectToType<User?>()
+                .FirstOrDefaultAsync(u => u.Email == email);
         }
 
         public async Task<User?> ReadById(Guid id)
         {
-            /*return await _dbContext.Users
+            return await _dbContext.Users
                 .AsNoTracking()
-                .FirstOrDefaultAsync(u => u.Id == id);*/
-            return null;
+                .ProjectToType<User?>()
+                .FirstOrDefaultAsync(u => u.Id == id);
         }
 
         public async Task<Guid> Update(User user)

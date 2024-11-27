@@ -1,4 +1,6 @@
+using MapsterMapper;
 using Microsoft.EntityFrameworkCore;
+using RentalOfPremises.API.Extensions;
 using RentalOfPremises.Infrastructure.MSSQLServer;
 
 namespace RentalOfPremises.API
@@ -8,6 +10,9 @@ namespace RentalOfPremises.API
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+
+            //Добавление конфигураций маппинга Mapster
+            builder.Services.RegisterMapsterConfiguration();
 
             // Add services to the container.
 
