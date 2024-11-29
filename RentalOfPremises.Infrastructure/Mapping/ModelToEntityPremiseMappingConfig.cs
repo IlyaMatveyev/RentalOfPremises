@@ -1,15 +1,16 @@
 ﻿using Mapster;
+using RentalOfPremises.Domain.Models;
+using RentalOfPremises.Infrastructure.Entities;
 
-namespace RentalOfPremises.Application.Mapping
+namespace RentalOfPremises.Infrastructure.Mapping
 {
-    public class PremiseMappingConfig : IRegister
+    public class ModelToEntityPremiseMappingConfig : IRegister
     {
         public void Register(TypeAdapterConfig config)
         {
             //TODO: Прописать маппинг для DTO
-            //Тут будет маппинг из DTO в Model и наоборот
 
-            /*TypeAdapterConfig<PremiseEntity, Premise>
+            TypeAdapterConfig<PremiseEntity, Premise>
                 .NewConfig()
                 .Map(dest => dest.Id, src => src.Id)
                 .Map(dest => dest.Address, src => src.Address)
@@ -20,7 +21,7 @@ namespace RentalOfPremises.Application.Mapping
                 .Map(dest => dest.Renter, src => src.Renter)
                 .Map(dest => dest.RenterId, src => src.RenterId)
                 .Map(dest => dest.Advert, src => src.Advert)
-                .TwoWays();*/
+                .TwoWays();
         }
     }
 }

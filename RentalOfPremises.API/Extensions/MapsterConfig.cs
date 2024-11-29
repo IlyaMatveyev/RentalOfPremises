@@ -1,6 +1,7 @@
 ﻿using Mapster;
 using MapsterMapper;
 using RentalOfPremises.Application.Mapping;
+using RentalOfPremises.Infrastructure.Mapping;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,10 +15,10 @@ namespace RentalOfPremises.API.Extensions
         public static void RegisterMapsterConfiguration(this IServiceCollection services)
         {
             // Подключение глобальных настроек Mapster
-            //ТУТ НАДО ПРОСКАНИТЬ СВЮ СБОРКУ И ПОДКЛЮЧИТЬ ВСЕ КОНФИГУРАЦИИ IRegister!!!!!!!!!
+            //ТУТ НАДО ПРОСКАНИТЬ ВСЮ СБОРКУ И ПОДКЛЮЧИТЬ ВСЕ КОНФИГУРАЦИИ IRegister!!!!!!!!!
             var config = TypeAdapterConfig.GlobalSettings;
             config.Scan(typeof(UserMappingConfig).Assembly); // Сканирует текущую сборку
-
+            config.Scan(typeof(ModelToEntityUserMappingConfig).Assembly);
 
             // Регистрация IMapper в DI
             services.AddSingleton(config);

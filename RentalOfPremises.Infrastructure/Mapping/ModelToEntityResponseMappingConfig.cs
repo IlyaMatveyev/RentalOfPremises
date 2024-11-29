@@ -1,14 +1,13 @@
 ﻿using Mapster;
+using RentalOfPremises.Infrastructure.Entities;
 
-namespace RentalOfPremises.Application.Mapping
+namespace RentalOfPremises.Infrastructure.Mapping
 {
-    public class ResponseMappingConfig : IRegister
+    public class ModelToEntityResponseMappingConfig : IRegister
     {
         public void Register(TypeAdapterConfig config)
         {
-            //Тут будет маппинг из DTO в Model и наоборот
-
-            /*TypeAdapterConfig<ResponseEntity, ResponseEntity>
+            TypeAdapterConfig<ResponseEntity, ResponseEntity>
                 .NewConfig()
                 .Map(dest => dest.Id, src => src.Id)
                 .Map(dest => dest.Message, src => src.Message)
@@ -16,7 +15,7 @@ namespace RentalOfPremises.Application.Mapping
                 .Map(dest => dest.SenderId, src => src.SenderId)
                 .Map(dest => dest.Advert, src => src.Advert)
                 .Map(dest => dest.AdvertId, src => src.AdvertId)
-                .TwoWays();*/
+                .TwoWays();
         }
     }
 }
