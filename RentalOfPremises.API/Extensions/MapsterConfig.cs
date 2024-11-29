@@ -2,11 +2,6 @@
 using MapsterMapper;
 using RentalOfPremises.Application.Mapping;
 using RentalOfPremises.Infrastructure.Mapping;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RentalOfPremises.API.Extensions
 {
