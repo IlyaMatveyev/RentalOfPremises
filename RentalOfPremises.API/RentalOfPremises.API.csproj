@@ -20,8 +20,4 @@
     <ProjectReference Include="..\RentalOfPremises.Infrastructure\RentalOfPremises.Infrastructure.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="DTOs\" />
-  </ItemGroup>
-
 </Project>

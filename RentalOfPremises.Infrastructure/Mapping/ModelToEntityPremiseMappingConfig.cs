@@ -8,8 +8,6 @@ namespace RentalOfPremises.Infrastructure.Mapping
     {
         public void Register(TypeAdapterConfig config)
         {
-            //TODO: Прописать маппинг для DTO
-
             TypeAdapterConfig<PremiseEntity, Premise>
                 .NewConfig()
                 .Map(dest => dest.Id, src => src.Id)

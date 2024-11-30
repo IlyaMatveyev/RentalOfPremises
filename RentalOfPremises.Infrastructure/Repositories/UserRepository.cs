@@ -18,11 +18,14 @@ namespace RentalOfPremises.Infrastructure.Repositories
             _mapper = mapper;
         }
 
+        public async Task<bool> CheckEmailUnique(string email)
+        {
+            var user = await _dbContext.Users.FirstOrDefaultAsync(u =>  u.Email == email);
+            return user == null;
+        }
 
         public async Task<Guid> Create(User user)
         {
-            //TODO: тут или в сервисе скорее всего нужно будет прописать нормальную работу с регистрацией пользователя
-
             //маппинг
             var userEntity = _mapper.Map<User, UserEntity>(user);
 

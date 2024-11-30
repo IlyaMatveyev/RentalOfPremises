@@ -1,16 +1,16 @@
-﻿using RentalOfPremises.Domain.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using RentalOfPremises.Application.DTOs;
+using RentalOfPremises.Domain.Models;
 
 namespace RentalOfPremises.Application.Interfaces
 {
     public interface IUserService
     {
-        public Task<Guid> Register(User user);
-        public Task<Guid> Login(User user);
+        public Task<Guid> Register(UserRegisterRequest userRequest);
+        public Task<string> Login(UserLoginRequest userRequest);
         public Task<User> GetByEmail(string email);
+
+
+        //TODO: Убрать этот метод, он для админки может понадобиться (в будущем)
+        Task<IEnumerable<User>> getAll();
     }
 }

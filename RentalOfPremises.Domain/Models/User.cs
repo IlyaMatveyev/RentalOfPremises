@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace RentalOfPremises.Domain.Models
+﻿namespace RentalOfPremises.Domain.Models
 {
     public class User
     {
@@ -29,5 +22,19 @@ namespace RentalOfPremises.Domain.Models
         
         //помещения, которые арендует сам User
         public List<Premise>? RentedPremises { get; set; }
+
+
+
+        public User(string userName, string passwordHash, string email)
+        {
+            Id = Guid.NewGuid();
+            UserName = userName;
+            Email = email;
+            PasswordHash = passwordHash;
+        }
+        public User()
+        {
+            Id = Guid.NewGuid();
+        }
     }
 }

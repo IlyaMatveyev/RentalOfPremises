@@ -17,5 +17,6 @@ namespace RentalOfPremises.Application.Interfaces
 
         public Task<User?> ReadByEmail(string email);
 
+        public Task<bool> CheckEmailUnique(string email);
     }
 }

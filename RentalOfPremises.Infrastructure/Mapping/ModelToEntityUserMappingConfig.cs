@@ -8,6 +8,7 @@ namespace RentalOfPremises.Infrastructure.Mapping
     {
         public void Register(TypeAdapterConfig config)
         {
+            //UserEntity -> User
             TypeAdapterConfig<UserEntity, User>
                 .NewConfig()
                 .Map(dest => dest.Id, src => src.Id)
@@ -20,7 +21,10 @@ namespace RentalOfPremises.Infrastructure.Mapping
                 .Map(dest => dest.Adverts, src => src.Adverts)
                 .Map(dest => dest.Responses, src => src.Responses)
                 .Map(dest => dest.RentedPremises, src => src.RentedPremises)
-                .TwoWays();
+                .TwoWays()
+                .MaxDepth(2);
+
+            
         }
     }
 }
