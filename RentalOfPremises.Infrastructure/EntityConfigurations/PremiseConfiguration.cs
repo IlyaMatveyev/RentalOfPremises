@@ -11,6 +11,7 @@ namespace RentalOfPremises.Infrastructure.EntityConfigurations
         {
             builder.HasKey(x => x.Id);
 
+            builder.Property(p => p.Name).HasMaxLength(128);
             builder.Property(p => p.Address).IsRequired().HasMaxLength(256);
             builder.Property(p => p.CoutOfRooms).IsRequired();
             builder.Property(p => p.Area).IsRequired();

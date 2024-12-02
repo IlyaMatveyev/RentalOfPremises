@@ -68,9 +68,6 @@ namespace RentalOfPremises.Application.Services
             return await _userRepository.ReadByEmail(email);
         }
 
-        public async Task<IEnumerable<User>> getAll()
-        {
-            return await _userRepository.ReadAll();
-        }
+        
     }
 }

@@ -10,7 +10,5 @@ namespace RentalOfPremises.Application.Interfaces
         public Task<User> GetByEmail(string email);
 
 
-        //TODO: Убрать этот метод, он для админки может понадобиться (в будущем)
-        Task<IEnumerable<User>> getAll();
     }
 }

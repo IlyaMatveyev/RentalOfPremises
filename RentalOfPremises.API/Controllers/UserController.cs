@@ -49,11 +49,6 @@ namespace RentalOfPremises.API.Controllers
             return Ok();
         }
 
-        [Authorize]
-        [HttpGet]
-        public async Task<ActionResult> getall()
-        {
-            return Ok(await _userService.getAll());
-        }
+        
     }
 }

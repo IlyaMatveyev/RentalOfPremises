@@ -11,6 +11,7 @@ namespace RentalOfPremises.Infrastructure.Mapping
             TypeAdapterConfig<PremiseEntity, Premise>
                 .NewConfig()
                 .Map(dest => dest.Id, src => src.Id)
+                .Map(dest => dest.Name, src => src.Name)
                 .Map(dest => dest.Address, src => src.Address)
                 .Map(dest => dest.CoutOfRooms, src => src.CoutOfRooms)
                 .Map(dest => dest.Area, src => src.Area)
@@ -19,6 +20,7 @@ namespace RentalOfPremises.Infrastructure.Mapping
                 .Map(dest => dest.Renter, src => src.Renter)
                 .Map(dest => dest.RenterId, src => src.RenterId)
                 .Map(dest => dest.Advert, src => src.Advert)
+                .MaxDepth(2)
                 .TwoWays();
         }
     }

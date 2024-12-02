@@ -1,4 +1,14 @@
-﻿namespace RentalOfPremises.Application.DTOs
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace RentalOfPremises.Application.DTOs
 {
-    public record UserRegisterRequest(string Email, string Password, string UserName);
+    public class UserRegisterRequest
+    {
+        [Required]
+        public string Email { get; set; }
+        [Required]
+        public string Password { get; set; }
+        [Required]
+        public string UserName { get; set; }
+    }
 }

@@ -45,6 +45,8 @@ namespace RentalOfPremises.API
             builder.Services.AddScoped<IJWTProvider, JWTProvider>();
             builder.Services.AddScoped<IPasswordHasher, PasswordHasher>();
 
+            builder.Services.AddScoped<IPremiseService, PremiseService>();
+            builder.Services.AddScoped<IPremiseRepository, PremiseRepository>();
 
 
             var app = builder.Build();

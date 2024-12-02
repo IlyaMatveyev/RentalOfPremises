@@ -10,6 +10,7 @@ namespace RentalOfPremises.Infrastructure.Entities
     public class PremiseEntity
     {
         public Guid Id { get; set; }
+        public string Name { get; set; } = string.Empty;
         public string Address { get; set; } = string.Empty;
         public int CoutOfRooms { get; set; } = 0;
         public double Area { get; set; } = 0;
