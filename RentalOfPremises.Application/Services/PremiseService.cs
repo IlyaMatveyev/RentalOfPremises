@@ -18,27 +18,33 @@ namespace RentalOfPremises.Application.Services
             return await _premiseRepository.Add(premise);
         }
 
-        public async Task<Premise> GetById(Guid premisId, Guid userId)
+        public async Task<Premise?> GetById(Guid premisId, Guid userId)
         {
             //TODO: Не забыть проверить что пользователь владелец этой записи
-            throw new NotImplementedException();
+            var premise = await _premiseRepository.ReadById(premisId);
+            if (premise == null || premise.OwnerId != userId)
+            {
+                return null;
+            }
+            return premise;
         }
 
-        public async Task<List<Premise>> GetAll(Guid userId)
+        public async Task<List<Premise>?> GetAll(Guid userId)
         {
-            throw new NotImplementedException();
+            return await _premiseRepository.ReadAll(userId);
         }
 
-        public async Task Delete(Guid premisId, Guid userId)
+        public async Task<int> Delete(Guid premisId, Guid userId)
         {
             //TODO: Тут нужно будет вытащить Premis по id и проверить OwnerId с userId
-            throw new NotImplementedException();
+            var countOfDelitedObjects = await _premiseRepository.Delete(premisId, userId);
+
+            return countOfDelitedObjects;
         }
 
-        public async Task<Guid> Update(Guid premisId, Premise premise, Guid userId)
+        public async Task<Guid> Update(Guid premisId, Premise premises, Guid userId)
         {
-            //TODO: Тут нужно будет вытащить Premis по id и проверить OwnerId с userId
-            throw new NotImplementedException();
+            return await _premiseRepository.Update(premisId, premises, userId);
         }
     }
 }

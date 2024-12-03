@@ -1,4 +1,5 @@
 ﻿using MapsterMapper;
+using Microsoft.EntityFrameworkCore;
 using RentalOfPremises.Application.Interfaces;
 using RentalOfPremises.Domain.Models;
 using RentalOfPremises.Infrastructure.Entities;
@@ -43,9 +44,20 @@ namespace RentalOfPremises.Infrastructure.Repositories
         /// <param name="id">Идентификатор помещения</param>
         /// <returns>Model.Premise</returns>
         /// <exception cref="NotImplementedException"></exception>
-        public async Task<Premise> ReadById(Guid id)
+        public async Task<Premise?> ReadById(Guid id)
         {
-            throw new NotImplementedException();
+            var premiseEntity = await _dbContext.Premises
+                .AsNoTracking()
+                .Include(p => p.Owner)
+                .Include(p => p.Renter)
+                .FirstOrDefaultAsync(p => p.Id == id);
+
+            if (premiseEntity == null)
+            {
+                return null;
+            }
+
+            return _mapper.Map<PremiseEntity, Premise>(premiseEntity);
         }
 
         /// <summary>
@@ -54,9 +66,18 @@ namespace RentalOfPremises.Infrastructure.Repositories
         /// <param name="userId">ID пользователя</param>
         /// <returns name="List<Premise>">Список помещений</returns>
         /// <exception cref="NotImplementedException"></exception>
-        public async Task<List<Premise>> ReadAll(Guid userId)
+        public async Task<List<Premise>?> ReadAll(Guid userId)
         {
-            throw new NotImplementedException();
+            var premisesEntityList = await _dbContext.Premises
+                .AsNoTracking()
+                .Include(p => p.Owner)
+                .Include(p => p.Renter)
+                .Where(p => p.OwnerId == userId)
+                .ToListAsync();
+
+            if (premisesEntityList == null) { return null; }
+
+            return _mapper.Map<List<PremiseEntity>, List<Premise>>(premisesEntityList);
         }
 
         /// <summary>
@@ -65,9 +86,12 @@ namespace RentalOfPremises.Infrastructure.Repositories
         /// <param name="id">ID помещения</param>
         /// <returns></returns>
         /// <exception cref="NotImplementedException"></exception>
-        public async Task Delete(Guid id)
+        public async Task<int> Delete(Guid premisesId, Guid userId)
         {
-            throw new NotImplementedException();
+            //Вернёт кол-во удалённых записей
+            return await _dbContext.Premises
+                .Where(p => p.Id == premisesId && p.OwnerId == userId)
+                .ExecuteDeleteAsync();
         }
 
         /// <summary>
@@ -77,9 +101,23 @@ namespace RentalOfPremises.Infrastructure.Repositories
         /// <param name="premise">Обновлённая информация о помещении</param>
         /// <returns name="Guid">ID обновлённой записи</returns>
         /// <exception cref="NotImplementedException"></exception>
-        public async Task<Guid> Update(Guid id, Premise premise)
+        public async Task<Guid> Update(Guid premisesId, Premise premises, Guid userId)
         {
-            throw new NotImplementedException();
+            var countOfUpdatedRows = await _dbContext.Premises
+                .Where(p => p.Id == premisesId && p.OwnerId == userId)
+                .ExecuteUpdateAsync(property => property
+                .SetProperty(p => p.Name, premises.Name)
+                .SetProperty(p => p.Address, premises.Address)
+                .SetProperty(p => p.Area, premises.Area)
+                .SetProperty(p => p.CoutOfRooms, premises.CoutOfRooms)
+                );
+
+            if (countOfUpdatedRows == 0)
+            {
+                return Guid.Empty;
+            }
+
+            return premisesId;
         }
 
     }
