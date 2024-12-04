@@ -3,6 +3,7 @@ using MapsterMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
+using RentalOfPremises.API.Extensions;
 using RentalOfPremises.Application.DTOs;
 using RentalOfPremises.Application.Interfaces;
 using RentalOfPremises.Domain.Models;
@@ -10,11 +11,11 @@ using RentalOfPremises.Domain.Models;
 namespace RentalOfPremises.API.Controllers
 {
     [ApiController]
-    public class PremiseController : ControllerBase
+    public class PremisesController : ControllerBase
     {
         private readonly IMapper _mapper;
         private readonly IPremiseService _premiseService;
-        public PremiseController(
+        public PremisesController(
             IPremiseService premiseService, 
             IMapper mapper)
         {
@@ -27,11 +28,9 @@ namespace RentalOfPremises.API.Controllers
         [Route("/Add")]
         public async Task<ActionResult<Guid>> Add(PremiseCreateRequest premiseCreateRequest)
         {
-            //TODO: Проверка на авторизацию и извлечение UserId везде повторяется. Подумать над выделением этой логики в отдельный метод.
-
-            //Достаём userId из клеймов JWT токена
-            var userIdClaim = HttpContext.User.FindFirst("userId");
-            if (userIdClaim == null || !Guid.TryParse(userIdClaim.Value, out var userId))
+            //Достаём userId из клеймов с помощью Extension метода
+            var userId = HttpContext.GetUserId();
+            if(userId == Guid.Empty)
             {
                 return Unauthorized(new
                 {
@@ -46,14 +45,13 @@ namespace RentalOfPremises.API.Controllers
             return Ok(await _premiseService.Add(premise, userId));
         }
 
-        [HttpGet]
+        [HttpGet("GetById/{premiseId:guid}")]
         [Authorize]
-        [Route("/GetById")]
-        public async Task<ActionResult<PremiseResponse>> GetById(Guid premiseId)
+        public async Task<ActionResult<PremiseResponse>> GetById([FromRoute]Guid premiseId)
         {
-            //Достаём userId из клеймов JWT токена
-            var userIdClaim = HttpContext.User.FindFirst("userId");
-            if (userIdClaim == null || !Guid.TryParse(userIdClaim.Value, out var userId))
+            //Достаём userId из клеймов с помощью Extension метода
+            var userId = HttpContext.GetUserId();
+            if (userId == Guid.Empty)
             {
                 return Unauthorized(new
                 {
@@ -74,14 +72,13 @@ namespace RentalOfPremises.API.Controllers
             return _mapper.Map<Premise, PremiseResponse>(premises);
         }
 
-        [HttpGet]
+        [HttpGet("GetAll")]
         [Authorize]
-        [Route("/GetAll")]
         public async Task<ActionResult<List<PremiseResponse>>> GetAll()
         {
-            //Достаём userId из клеймов JWT токена
-            var userIdClaim = HttpContext.User.FindFirst("userId");
-            if (userIdClaim == null || !Guid.TryParse(userIdClaim.Value, out var userId))
+            //Достаём userId из клеймов с помощью Extension метода
+            var userId = HttpContext.GetUserId();
+            if (userId == Guid.Empty)
             {
                 return Unauthorized(new
                 {
@@ -104,14 +101,13 @@ namespace RentalOfPremises.API.Controllers
             return Ok(premisesList.Adapt<List<PremiseResponse>>());
         }
 
-        [HttpDelete]
+        [HttpDelete("Delete/{premisesId:guid}")]
         [Authorize]
-        [Route("/Delete")]
-        public async Task<ActionResult> Delete(Guid premisesId)
+        public async Task<ActionResult> Delete([FromRoute] Guid premisesId)
         {
-            //Достаём userId из клеймов JWT токена
-            var userIdClaim = HttpContext.User.FindFirst("userId");
-            if (userIdClaim == null || !Guid.TryParse(userIdClaim.Value, out var userId))
+            //Достаём userId из клеймов с помощью Extension метода
+            var userId = HttpContext.GetUserId();
+            if (userId == Guid.Empty)
             {
                 return Unauthorized(new
                 {
@@ -126,20 +122,19 @@ namespace RentalOfPremises.API.Controllers
             {
                 return BadRequest(new
                 {
-                    massage = "Premises not found of you are not Owner."
+                    massage = "Premises not found or you are not Owner."
                 });
             }
             return Ok($"Number of deleted records: {countOfDeletedObj}");
         }
 
-        [HttpPut]
+        [HttpPut("Update/{premisesId:guid}")]
         [Authorize]
-        [Route("/Update")]
-        public async Task<ActionResult<Guid>> Update(Guid premisesId, PremisesUpdateRequest premisesUpdateRequest)
+        public async Task<ActionResult<Guid>> Update([FromRoute] Guid premisesId, [FromBody] PremisesUpdateRequest premisesUpdateRequest)
         {
-            //Достаём userId из клеймов JWT токена
-            var userIdClaim = HttpContext.User.FindFirst("userId");
-            if (userIdClaim == null || !Guid.TryParse(userIdClaim.Value, out var userId))
+            //Достаём userId из клеймов с помощью Extension метода
+            var userId = HttpContext.GetUserId();
+            if (userId == Guid.Empty)
             {
                 return Unauthorized(new
                 {
