@@ -1,3 +1,5 @@
+using CloudinaryDotNet;
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using RentalOfPremises.API.Extensions;
@@ -5,6 +7,7 @@ using RentalOfPremises.Application.Interfaces;
 using RentalOfPremises.Application.Interfaces.Auth;
 using RentalOfPremises.Application.Services;
 using RentalOfPremises.Infrastructure.Auth;
+using RentalOfPremises.Infrastructure.ImageStorage;
 using RentalOfPremises.Infrastructure.MSSQLServer;
 using RentalOfPremises.Infrastructure.Repositories;
 
@@ -25,7 +28,14 @@ namespace RentalOfPremises.API
             //Добавление конфигураций маппинга Mapster
             builder.Services.RegisterMapsterConfiguration();
 
-            // Add services to the container.
+            
+
+            // Чтение конфигурации из appsettings.json
+            builder.Services.Configure<CloudinarySettings>(builder.Configuration.GetSection("Cloudinary"));
+            
+            // Регистрируем сервис работы с изображениями
+            builder.Services.AddSingleton<IImageStorage, CloudinaryImageStorage>();
+
 
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -38,6 +48,7 @@ namespace RentalOfPremises.API
                 options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 
+
             //Регистрация зависимостей
             builder.Services.AddScoped<IUserService, UserService>();
             builder.Services.AddScoped<IUserRepository, UserRepository>();
@@ -45,8 +56,16 @@ namespace RentalOfPremises.API
             builder.Services.AddScoped<IJWTProvider, JWTProvider>();
             builder.Services.AddScoped<IPasswordHasher, PasswordHasher>();
 
-            builder.Services.AddScoped<IPremiseService, PremiseService>();
-            builder.Services.AddScoped<IPremiseRepository, PremiseRepository>();
+            builder.Services.AddScoped<IPremisesService, PremisesService>();
+            builder.Services.AddScoped<IPremisesRepository, PremisesRepository>();
+
+            //builder.Services.AddTransient<IImageStorage, CloudinaryImageStorage>();
+
+            //Явные лимиты для обработки файлов
+            builder.Services.Configure<FormOptions>(options =>
+            {
+                options.MultipartBodyLengthLimit = 10485760; // 10 MB
+            });
 
 
             var app = builder.Build();
@@ -57,6 +76,10 @@ namespace RentalOfPremises.API
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
+
+            //app.UseCors("AllowAll");
+
+            app.UseMiddleware<ExceptionHandlingMiddleware>();
 
 
             app.UseRouting();
@@ -75,7 +98,7 @@ namespace RentalOfPremises.API
             app.UseAuthentication();
             app.UseAuthorization();
 
-
+            
             app.MapControllers();
 
             app.Run();

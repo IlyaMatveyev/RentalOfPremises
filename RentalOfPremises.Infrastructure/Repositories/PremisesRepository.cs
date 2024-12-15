@@ -7,26 +7,21 @@ using RentalOfPremises.Infrastructure.MSSQLServer;
 
 namespace RentalOfPremises.Infrastructure.Repositories
 {
-    public class PremiseRepository : IPremiseRepository
+    public class PremisesRepository : IPremisesRepository
     {
         private readonly IRentalOfPremisesDbContext _dbContext;
         private readonly IMapper _mapper;
-        public PremiseRepository(
+        private readonly IImageStorage _imageStorage;
+        public PremisesRepository(
             IRentalOfPremisesDbContext dbContext,
-            IMapper mapper)
+            IMapper mapper,
+            IImageStorage imageStorage)
         {
             _dbContext = dbContext;
             _mapper = mapper;
+            _imageStorage = imageStorage;
         }
 
-        /*
-         Необходимые методы:
-        1) Добавление Помещения Пользователя;
-        2) Считывание всех Помещений конкретного пользователя
-        3) Считывание всех Помещений пользователя
-        4) Удаление Помещения пользователя по Id
-        5) Изменение Помещения пользователя по Id
-        */
 
         public async Task<Guid> Add(Premise premise)
         {
@@ -44,17 +39,17 @@ namespace RentalOfPremises.Infrastructure.Repositories
         /// <param name="id">Идентификатор помещения</param>
         /// <returns>Model.Premise</returns>
         /// <exception cref="NotImplementedException"></exception>
-        public async Task<Premise?> ReadById(Guid id)
+        public async Task<Premise> ReadById(Guid premisesId, Guid userId)
         {
             var premiseEntity = await _dbContext.Premises
                 .AsNoTracking()
                 .Include(p => p.Owner)
                 .Include(p => p.Renter)
-                .FirstOrDefaultAsync(p => p.Id == id);
+                .FirstOrDefaultAsync(p => p.Id == premisesId && p.OwnerId == userId);
 
             if (premiseEntity == null)
             {
-                return null;
+                throw new KeyNotFoundException("Premises not found!");
             }
 
             return _mapper.Map<PremiseEntity, Premise>(premiseEntity);
@@ -88,10 +83,28 @@ namespace RentalOfPremises.Infrastructure.Repositories
         /// <exception cref="NotImplementedException"></exception>
         public async Task<int> Delete(Guid premisesId, Guid userId)
         {
-            //Вернёт кол-во удалённых записей
-            return await _dbContext.Premises
+            var imageUrl = await _dbContext.Premises
+                .Where(p => p.Id == premisesId && p.OwnerId == userId)
+                .Select(p => p.MainImageUrl)
+                .SingleOrDefaultAsync();
+
+            //удаление mainImage
+            if (!string.IsNullOrEmpty(imageUrl))
+            {
+                var isDeleted = await _imageStorage.DeleteImageByUrl(imageUrl, userId);
+                if(isDeleted == false)
+                {
+                    throw new Exception("The Main Image could not be deleted when deleting the Premises object.");
+                }
+            }
+            
+
+            //Удаление Premises из БД
+            var countOfDelitedObjects = await _dbContext.Premises
                 .Where(p => p.Id == premisesId && p.OwnerId == userId)
                 .ExecuteDeleteAsync();
+
+            return countOfDelitedObjects;
         }
 
         /// <summary>
@@ -110,6 +123,7 @@ namespace RentalOfPremises.Infrastructure.Repositories
                 .SetProperty(p => p.Address, premises.Address)
                 .SetProperty(p => p.Area, premises.Area)
                 .SetProperty(p => p.CoutOfRooms, premises.CoutOfRooms)
+                .SetProperty(p => p.MainImageUrl, premises.MainImageUrl)
                 );
 
             if (countOfUpdatedRows == 0)

@@ -9,6 +9,7 @@ namespace RentalOfPremises.Application.DTOs
         public string Address { get; set; } = string.Empty;
         public int CoutOfRooms { get; set; } = 0;
         public double Area { get; set; } = 0;
+        public string MainImageUrl { get; set; } = string.Empty;
 
 
         //владелец помещения

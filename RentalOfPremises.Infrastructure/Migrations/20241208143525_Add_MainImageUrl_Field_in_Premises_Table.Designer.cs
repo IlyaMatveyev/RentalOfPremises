@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RentalOfPremises.Infrastructure.MSSQLServer;
 
@@ -11,9 +12,11 @@ using RentalOfPremises.Infrastructure.MSSQLServer;
 namespace RentalOfPremises.Infrastructure.Migrations
 {
     [DbContext(typeof(RentalOfPremisesDbContext))]
-    partial class RentalOfPremisesDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241208143525_Add_MainImageUrl_Field_in_Premises_Table")]
+    partial class Add_MainImageUrl_Field_in_Premises_Table
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

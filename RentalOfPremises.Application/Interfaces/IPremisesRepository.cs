@@ -2,12 +2,12 @@
 
 namespace RentalOfPremises.Application.Interfaces
 {
-    public interface IPremiseRepository
+    public interface IPremisesRepository
     {
         Task<Guid> Add(Premise premise);
         Task<int> Delete(Guid premisesId, Guid userId);
         Task<List<Premise>?> ReadAll(Guid userId);
-        Task<Premise?> ReadById(Guid id);
+        Task<Premise> ReadById(Guid premisesId, Guid userId);
         Task<Guid> Update(Guid premisesId, Premise premises, Guid userId);
     }
 }

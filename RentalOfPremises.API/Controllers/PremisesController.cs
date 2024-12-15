@@ -11,22 +11,25 @@ using RentalOfPremises.Domain.Models;
 namespace RentalOfPremises.API.Controllers
 {
     [ApiController]
+    [Route("[controller]")]
     public class PremisesController : ControllerBase
     {
         private readonly IMapper _mapper;
-        private readonly IPremiseService _premiseService;
+        private readonly IPremisesService _premiseService;
+        private readonly IImageStorage _imageStorage;
         public PremisesController(
-            IPremiseService premiseService, 
-            IMapper mapper)
+            IPremisesService premiseService, 
+            IMapper mapper,
+            IImageStorage imageStorage)
         {
             _mapper = mapper;
             _premiseService = premiseService;
+            _imageStorage = imageStorage;
         }
 
-        [HttpPost]
+        [HttpPost("Add")]
         [Authorize]
-        [Route("/Add")]
-        public async Task<ActionResult<Guid>> Add(PremiseCreateRequest premiseCreateRequest)
+        public async Task<ActionResult<Guid>> Add([FromForm]PremiseCreateRequest premiseCreateRequest)
         {
             //Достаём userId из клеймов с помощью Extension метода
             var userId = HttpContext.GetUserId();
@@ -40,9 +43,20 @@ namespace RentalOfPremises.API.Controllers
             }
 
             //Маппинг
-            var premise = _mapper.Map<PremiseCreateRequest, Premise>(premiseCreateRequest);
+            var premises = _mapper.Map<PremiseCreateRequest, Premise>(premiseCreateRequest);
+
             
-            return Ok(await _premiseService.Add(premise, userId));
+            //если есть фото, то проверяем его и добавляем
+            if(premiseCreateRequest.MainPhoto != null)
+            {
+                if (_imageStorage.ValidateImageFile(premiseCreateRequest.MainPhoto))
+                {
+                    var imageUrl = await _imageStorage.AddPremisesMainImage(premiseCreateRequest.MainPhoto, $"{userId}/premises");
+                    premises.MainImageUrl = imageUrl;
+                }
+            }
+
+            return Ok(await _premiseService.Add(premises, userId));
         }
 
         [HttpGet("GetById/{premiseId:guid}")]
@@ -125,7 +139,7 @@ namespace RentalOfPremises.API.Controllers
                     massage = "Premises not found or you are not Owner."
                 });
             }
-            return Ok($"Number of deleted records: {countOfDeletedObj}");
+            return Ok($"Number of deleted object(s): {countOfDeletedObj}");
         }
 
         [HttpPut("Update/{premisesId:guid}")]
@@ -155,6 +169,26 @@ namespace RentalOfPremises.API.Controllers
             }
 
             return Ok(updatedPremisesId);
+        }
+
+        [HttpPut("UpdateMainImage/{premisesId:guid}")]
+        [Authorize]
+        public async Task<ActionResult<Guid>> UpdateMainImage([FromRoute] Guid premisesId, [FromForm] UpdateMainImageRequest request)
+        {
+            //Достаём userId из клеймов с помощью Extension метода
+            var userId = HttpContext.GetUserId();
+            if (userId == Guid.Empty)
+            {
+                return Unauthorized(new
+                {
+                    error = "Unauthorized",
+                    message = "User ID is not valid or missing."
+                });
+            }
+            if (request.newImage == null)
+                return BadRequest("The newImage field is required.");
+
+            return await _premiseService.UpdateMainImage(premisesId, request.newImage, userId);
         }
     }
 }

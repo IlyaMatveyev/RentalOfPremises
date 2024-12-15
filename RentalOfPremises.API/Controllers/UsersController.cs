@@ -7,10 +7,10 @@ namespace RentalOfPremises.API.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class UserController : ControllerBase
+    public class UsersController : ControllerBase
     {
         public readonly IUserService _userService;
-        public UserController(IUserService userService)
+        public UsersController(IUserService userService)
         {
             _userService = userService;
         }
@@ -29,7 +29,6 @@ namespace RentalOfPremises.API.Controllers
                     error = "EmailAlreadyExists",
                     message = "The provided email is already registered."
                 });
-                //return Results.BadRequest();
             }
             else
             {

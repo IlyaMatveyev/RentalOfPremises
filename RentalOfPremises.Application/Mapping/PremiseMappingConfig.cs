@@ -33,6 +33,7 @@ namespace RentalOfPremises.Application.Mapping
                 .Map(dest => dest.Address, src => src.Address)
                 .Map(dest => dest.CoutOfRooms, src => src.CoutOfRooms)
                 .Map(dest => dest.Area, src => src.Area)
+                .Map(dest => dest.MainImageUrl, src => src.MainImageUrl)
                 .Map(dest => dest.OwnerName, src => src.Owner.UserName != null ? src.Owner.UserName : null)
                 .Map(dest => dest.RenterName, src => src.Renter != null ? src.Renter.UserName : null);
         }
