@@ -5,11 +5,11 @@ namespace RentalOfPremises.Application.Interfaces
 {
     public interface IPremisesService
     {
-        Task<Guid> Add(Premise premise, Guid userId);
-        Task<int> Delete(Guid premisId, Guid userId);
-        Task<List<Premise>?> GetAll(Guid userId);
-        Task<Premise?> GetById(Guid premisId, Guid userId);
-        Task<Guid> Update(Guid premisId, Premise premise, Guid userId);
-        Task<Guid> UpdateMainImage(Guid premisesId, IFormFile newImage, Guid userId);
+        Task<Guid> Add(Premises premises, IFormFile? mainImage);
+        Task<int> Delete(Guid premisesId);
+        Task<List<Premises>?> GetAll();
+        Task<Premises?> GetById(Guid premisesId);
+        Task<Guid> Update(Guid premisesId, Premises premises);
+        Task<Guid> UpdateMainImage(Guid premisesId, IFormFile newImage);
     }
 }

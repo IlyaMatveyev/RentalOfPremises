@@ -8,7 +8,7 @@ namespace RentalOfPremises.Infrastructure.Mapping
     {
         public void Register(TypeAdapterConfig config)
         {
-            TypeAdapterConfig<PremiseEntity, Premise>
+            TypeAdapterConfig<PremiseEntity, Premises>
                 .NewConfig()
                 .Map(dest => dest.Id, src => src.Id)
                 .Map(dest => dest.Name, src => src.Name)

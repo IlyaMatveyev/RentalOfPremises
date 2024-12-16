@@ -1,7 +1,7 @@
 ﻿namespace RentalOfPremises.Domain.Models
 {
     //Класс помещения
-    public class Premise
+    public class Premises
     {
         public Guid Id { get; set; }
         public string Name { get; set; } = string.Empty; //название, которое будет видеть только владелец. (Для удобства)
@@ -21,7 +21,7 @@
         //объявление о сдаче этого помещения
         public Advert? Advert { get; set; }
 
-        public Premise()
+        public Premises()
         {
             Id = Guid.NewGuid();
         }

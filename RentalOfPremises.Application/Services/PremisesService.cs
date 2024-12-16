@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
+using RentalOfPremises.Application.DTOs;
 using RentalOfPremises.Application.Interfaces;
+using RentalOfPremises.Application.Interfaces.Auth;
 using RentalOfPremises.Domain.Models;
 
 namespace RentalOfPremises.Application.Services
@@ -8,61 +10,71 @@ namespace RentalOfPremises.Application.Services
     {
         private readonly IPremisesRepository _premiseRepository;
         private readonly IImageStorage _imageStorage;
+        private readonly ICurrentUserContext _currentUserContext;
         public PremisesService(
             IPremisesRepository premiseRepository, 
-            IImageStorage imageStorage
+            IImageStorage imageStorage,
+            ICurrentUserContext currentUserContext
             )
         {
             _premiseRepository = premiseRepository;
             _imageStorage = imageStorage;
+            _currentUserContext = currentUserContext;
         }
 
-        public async Task<Guid> Add(Premise premise, Guid userId)
+        public async Task<Guid> Add(Premises premises, IFormFile? mainImage)
         {
-            premise.OwnerId = userId;
+            premises.OwnerId = _currentUserContext.UserId;
 
-            return await _premiseRepository.Add(premise);
+            //если есть фото, то добавляем
+            if (mainImage != null)
+            {
+                if (_imageStorage.ValidateImageFile(mainImage))
+                {
+                    var imageUrl = await _imageStorage.AddPremisesMainImage(mainImage, $"{_currentUserContext.UserId}/premises");
+                    premises.MainImageUrl = imageUrl;
+                }
+            }
+
+
+            return await _premiseRepository.Add(premises);
         }
 
-        public async Task<Premise?> GetById(Guid premisesId, Guid userId)
+        public async Task<Premises?> GetById(Guid premisesId)
         {
-            var premise = await _premiseRepository.ReadById(premisesId, userId);
+            var premise = await _premiseRepository.ReadById(premisesId);
             
             return premise;
         }
 
-        public async Task<List<Premise>?> GetAll(Guid userId)
+        public async Task<List<Premises>?> GetAll()
         {
-            return await _premiseRepository.ReadAll(userId);
+            return await _premiseRepository.ReadAll();
         }
 
-        public async Task<int> Delete(Guid premisId, Guid userId)
+        public async Task<int> Delete(Guid premisesId)
         {
             //TODO: Тут нужно будет вытащить Premis по id и проверить OwnerId с userId
-            var countOfDelitedObjects = await _premiseRepository.Delete(premisId, userId);
+            var countOfDelitedObjects = await _premiseRepository.Delete(premisesId);
 
             return countOfDelitedObjects;
         }
 
-        public async Task<Guid> Update(Guid premisId, Premise premises, Guid userId)
+        public async Task<Guid> Update(Guid premisId, Premises premises)
         {
-            return await _premiseRepository.Update(premisId, premises, userId);
+            return await _premiseRepository.Update(premisId, premises);
         }
 
-        public async Task<Guid> UpdateMainImage(Guid premisesId, IFormFile newImage, Guid userId)
+        public async Task<Guid> UpdateMainImage(Guid premisesId, IFormFile newImage)
         {
-            var premises = await _premiseRepository.ReadById(premisesId, userId);
+            var premises = await _premiseRepository.ReadById(premisesId);
 
             if (!string.IsNullOrEmpty(premises.MainImageUrl))
             {
-                var imageUrl = await _imageStorage.UpdatePremisesMainImage(userId, newImage, premises.MainImageUrl);
+                await _imageStorage.DeleteImageByUrl(premises.MainImageUrl, _currentUserContext.UserId);
             }
-            else
-            {
-                var imageUrl = await _imageStorage.AddPremisesMainImage(newImage, $"{userId}/premises");
-                premises.MainImageUrl = imageUrl;
-                await _premiseRepository.Update(premisesId, premises, userId);
-            }
+            var imageUrl = await _imageStorage.AddPremisesMainImage(newImage, $"{_currentUserContext.UserId}/premises");
+            await _premiseRepository.UpdateMainImage(premisesId, imageUrl);
 
             return premises.Id;
         }

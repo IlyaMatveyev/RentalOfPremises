@@ -11,7 +11,7 @@
         public bool IsBanned { get; set; } = false;
 
         //помещения во владении пользователя
-        public List<Premise>? PersonalPremises { get; set; }
+        public List<Premises>? PersonalPremises { get; set; }
         
         //объявления, составленные этим пользователем
         public List<Advert>? Adverts { get; set; }
@@ -21,7 +21,7 @@
         public List<Response>? Responses { get; set; }
         
         //помещения, которые арендует сам User
-        public List<Premise>? RentedPremises { get; set; }
+        public List<Premises>? RentedPremises { get; set; }
 
 
 

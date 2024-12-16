@@ -43,20 +43,9 @@ namespace RentalOfPremises.API.Controllers
             }
 
             //Маппинг
-            var premises = _mapper.Map<PremiseCreateRequest, Premise>(premiseCreateRequest);
+            var premises = _mapper.Map<PremiseCreateRequest, Premises>(premiseCreateRequest);
 
-            
-            //если есть фото, то проверяем его и добавляем
-            if(premiseCreateRequest.MainPhoto != null)
-            {
-                if (_imageStorage.ValidateImageFile(premiseCreateRequest.MainPhoto))
-                {
-                    var imageUrl = await _imageStorage.AddPremisesMainImage(premiseCreateRequest.MainPhoto, $"{userId}/premises");
-                    premises.MainImageUrl = imageUrl;
-                }
-            }
-
-            return Ok(await _premiseService.Add(premises, userId));
+            return Ok(await _premiseService.Add(premises, premiseCreateRequest.MainPhoto));
         }
 
         [HttpGet("GetById/{premiseId:guid}")]
@@ -74,7 +63,7 @@ namespace RentalOfPremises.API.Controllers
                 });
             }
 
-            var premises = await _premiseService.GetById(premiseId, userId);
+            var premises = await _premiseService.GetById(premiseId);
 
             if (premises == null)
             {
@@ -83,7 +72,7 @@ namespace RentalOfPremises.API.Controllers
                     massage = "Premises not found or you are not Owner."
                 });
             }
-            return _mapper.Map<Premise, PremiseResponse>(premises);
+            return _mapper.Map<Premises, PremiseResponse>(premises);
         }
 
         [HttpGet("GetAll")]
@@ -101,7 +90,7 @@ namespace RentalOfPremises.API.Controllers
                 });
             }
 
-            var premisesList = await _premiseService.GetAll(userId);
+            var premisesList = await _premiseService.GetAll();
 
 
             if (premisesList.IsNullOrEmpty())
@@ -130,7 +119,7 @@ namespace RentalOfPremises.API.Controllers
                 });
             }
 
-            var countOfDeletedObj = await _premiseService.Delete(premisesId, userId);
+            var countOfDeletedObj = await _premiseService.Delete(premisesId);
 
             if(countOfDeletedObj == 0)
             {
@@ -158,9 +147,9 @@ namespace RentalOfPremises.API.Controllers
             }
 
             //маппинг
-            var premises = _mapper.Map<PremisesUpdateRequest, Premise>(premisesUpdateRequest);
+            var premises = _mapper.Map<PremisesUpdateRequest, Premises>(premisesUpdateRequest);
 
-            var updatedPremisesId = await _premiseService.Update(premisesId, premises, userId);
+            var updatedPremisesId = await _premiseService.Update(premisesId, premises);
 
 
             if (updatedPremisesId == Guid.Empty)
@@ -188,7 +177,7 @@ namespace RentalOfPremises.API.Controllers
             if (request.newImage == null)
                 return BadRequest("The newImage field is required.");
 
-            return await _premiseService.UpdateMainImage(premisesId, request.newImage, userId);
+            return await _premiseService.UpdateMainImage(premisesId, request.newImage);
         }
     }
 }

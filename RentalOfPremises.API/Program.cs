@@ -1,5 +1,3 @@
-using CloudinaryDotNet;
-using Microsoft.AspNetCore.Http.Features;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using RentalOfPremises.API.Extensions;
@@ -55,17 +53,19 @@ namespace RentalOfPremises.API
 
             builder.Services.AddScoped<IJWTProvider, JWTProvider>();
             builder.Services.AddScoped<IPasswordHasher, PasswordHasher>();
+            builder.Services.AddScoped<ICurrentUserContext, CurrentUserContext>();
+            builder.Services.AddHttpContextAccessor();
 
             builder.Services.AddScoped<IPremisesService, PremisesService>();
             builder.Services.AddScoped<IPremisesRepository, PremisesRepository>();
 
             //builder.Services.AddTransient<IImageStorage, CloudinaryImageStorage>();
 
-            //явные лимиты дл€ обработки файлов
+            /*//явные лимиты дл€ обработки файлов
             builder.Services.Configure<FormOptions>(options =>
             {
                 options.MultipartBodyLengthLimit = 10485760; // 10 MB
-            });
+            });*/
 
 
             var app = builder.Build();

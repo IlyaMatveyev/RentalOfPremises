@@ -9,7 +9,7 @@ namespace RentalOfPremises.Application.Mapping
         public void Register(TypeAdapterConfig config)
         {
             //PremiseCreateRequest -> Premise
-            TypeAdapterConfig<PremiseCreateRequest, Premise>
+            TypeAdapterConfig<PremiseCreateRequest, Premises>
                 .NewConfig()
                 .Map(dest => dest.Name, src => src.Name)
                 .Map(dest => dest.Address, src => src.Address)
@@ -18,7 +18,7 @@ namespace RentalOfPremises.Application.Mapping
                 .MaxDepth(2);
 
             //PremiseUpdateRequest -> Premise
-            TypeAdapterConfig<PremisesUpdateRequest, Premise>
+            TypeAdapterConfig<PremisesUpdateRequest, Premises>
                 .NewConfig()
                 .Map(dest => dest.Name, src => src.Name)
                 .Map(dest => dest.Address, src => src.Address)
@@ -26,7 +26,7 @@ namespace RentalOfPremises.Application.Mapping
                 .Map(dest => dest.Area, src => src.Area)
                 .MaxDepth(2);
 
-            TypeAdapterConfig<Premise, PremiseResponse>
+            TypeAdapterConfig<Premises, PremiseResponse>
                 .NewConfig()
                 .Map(dest => dest.Id, src => src.Id)
                 .Map(dest => dest.Name, src => src.Name)

@@ -3,6 +3,8 @@ using CloudinaryDotNet.Actions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
 using RentalOfPremises.Application.Interfaces;
+using RentalOfPremises.Application.Interfaces.Auth;
+using RentalOfPremises.Domain.Models;
 
 namespace RentalOfPremises.Infrastructure.ImageStorage
 {
@@ -13,7 +15,9 @@ namespace RentalOfPremises.Infrastructure.ImageStorage
 
         private readonly Cloudinary _cloudinary;
 
-        public CloudinaryImageStorage(IOptions<CloudinarySettings> options)
+        public CloudinaryImageStorage(
+            IOptions<CloudinarySettings> options
+            )
         {
             var acc = new Account
             {
@@ -23,6 +27,7 @@ namespace RentalOfPremises.Infrastructure.ImageStorage
             };
 
             _cloudinary = new Cloudinary(acc);
+
         }
 
         public async Task<string> AddPremisesMainImage(IFormFile image, string path)
@@ -39,13 +44,15 @@ namespace RentalOfPremises.Infrastructure.ImageStorage
             return uploadResult.SecureUrl.ToString();
         }
 
-        public async Task<string> UpdatePremisesMainImage(Guid userId, IFormFile newImage, string imageUrl) //TODO: Протестить
+        /*public async Task<string> UpdatePremisesMainImage(IFormFile newImage, string imageUrl, Guid userId) //TODO: Протестить
         {
             var isValid = ValidateImageFile(newImage);
             if (!isValid)
             {
                 throw new ArgumentException("File is invalid!");
             }
+
+
 
             var publicId = ExtractPublicIdFromUrl(imageUrl, userId);
             using var stream = newImage.OpenReadStream();
@@ -66,7 +73,7 @@ namespace RentalOfPremises.Infrastructure.ImageStorage
 
             return uploadResult.SecureUrl.ToString();
 
-        }
+        }*/
 
         public async Task<bool> DeleteImageByUrl(string imageUrl, Guid userId)
         {
@@ -84,13 +91,11 @@ namespace RentalOfPremises.Infrastructure.ImageStorage
                 return false;
             }
 
-
             // Проверка размера файла
             if (image.Length > maxFileSize)
             {
                 return false;
             }
-
 
             // Проверка расширения файла
             var allowedExtensions = new[] { ".jpg", ".jpeg" };
@@ -106,14 +111,6 @@ namespace RentalOfPremises.Infrastructure.ImageStorage
 
         private string ExtractPublicIdFromUrl(string imageUrl, Guid userId)
         {
-            /*// Извлекаем часть после последнего "/"
-            var lastSegment = imageUrl.Substring(imageUrl.LastIndexOf('/') + 1);
-
-            // Убираем всё после последней точки, включая саму точку
-            var publicId = lastSegment.Substring(0, lastSegment.LastIndexOf('.'));
-
-            return publicId;*/
-
             // Преобразуем userId в строку
             string userIdString = userId.ToString();
 

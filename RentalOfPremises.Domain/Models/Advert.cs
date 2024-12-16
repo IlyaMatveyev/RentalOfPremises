@@ -21,6 +21,6 @@ namespace RentalOfPremises.Domain.Models
 
         //помещение
         public Guid PremiseId { get; set; }
-        public Premise Premise { get; set; }
+        public Premises Premise { get; set; }
     }
 }
