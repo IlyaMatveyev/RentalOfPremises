@@ -1,4 +1,4 @@
-﻿using RentalOfPremises.Application.DTOs;
+﻿using RentalOfPremises.Application.DTOs.UserDto;
 using RentalOfPremises.Application.Interfaces;
 using RentalOfPremises.Application.Interfaces.Auth;
 using RentalOfPremises.Domain.Models;
@@ -10,12 +10,12 @@ using System.Threading.Tasks;
 
 namespace RentalOfPremises.Application.Services
 {
-    public class UserService : IUserService
+    public class UsersService : IUserService
     {
         private readonly IUserRepository _userRepository;
         private readonly IPasswordHasher _passwordHasher;
         private readonly IJWTProvider _jwtProvider;
-        public UserService(
+        public UsersService(
             IUserRepository userRepository, 
             IPasswordHasher passwordHasher,
             IJWTProvider jwtProvider)

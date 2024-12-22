@@ -1,17 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace RentalOfPremises.Domain.Models
+﻿namespace RentalOfPremises.Domain.Models
 {
     //Объявление о сдаче помещения
     public class Advert 
     {
-        public Guid Id { get; set; }
+        public Guid Id { get; set; } = Guid.NewGuid();
         public string Label { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;
+        public decimal Price { get; set; } = decimal.Zero;
+
+        public bool IsPublished { get; set; } = false;
+
+        //главное фото объявления
+        public string MainImageUrl = string.Empty;
+
+        //список фото в объявлении
+        public List<ImageInAdvert>? ListImageUrl {  get; set; }
 
         public List<Response>? Responses { get; set; } //список откликов
 

@@ -3,8 +3,6 @@ using CloudinaryDotNet.Actions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
 using RentalOfPremises.Application.Interfaces;
-using RentalOfPremises.Application.Interfaces.Auth;
-using RentalOfPremises.Domain.Models;
 
 namespace RentalOfPremises.Infrastructure.ImageStorage
 {
@@ -43,37 +41,6 @@ namespace RentalOfPremises.Infrastructure.ImageStorage
             var uploadResult = await _cloudinary.UploadAsync(uploadParams);
             return uploadResult.SecureUrl.ToString();
         }
-
-        /*public async Task<string> UpdatePremisesMainImage(IFormFile newImage, string imageUrl, Guid userId) //TODO: Протестить
-        {
-            var isValid = ValidateImageFile(newImage);
-            if (!isValid)
-            {
-                throw new ArgumentException("File is invalid!");
-            }
-
-
-
-            var publicId = ExtractPublicIdFromUrl(imageUrl, userId);
-            using var stream = newImage.OpenReadStream();
-
-            var uploadParams = new ImageUploadParams
-            {
-                File = new FileDescription(newImage.FileName, stream),
-                PublicId = publicId,
-                Overwrite = true
-            };
-
-            var uploadResult = await _cloudinary.UploadAsync(uploadParams);
-
-            if(uploadResult.StatusCode != System.Net.HttpStatusCode.OK)
-            {
-                throw new Exception($"Image replacement failed: {uploadResult.Error?.Message}");
-            }
-
-            return uploadResult.SecureUrl.ToString();
-
-        }*/
 
         public async Task<bool> DeleteImageByUrl(string imageUrl, Guid userId)
         {

@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using RentalOfPremises.Domain.Models;
 using RentalOfPremises.Infrastructure.Entities;
 using RentalOfPremises.Infrastructure.EntityConfigurations;
 
@@ -13,8 +12,9 @@ namespace RentalOfPremises.Infrastructure.MSSQLServer
 
         public DbSet<UserEntity> Users { get; set; }
         public DbSet<PremiseEntity> Premises { get; set; }
-        public DbSet<ResponseEntity> Responses { get; set; }
         public DbSet<AdvertEntity> Adverts { get; set; }
+        public DbSet<ImageInAdvertEntity> ImagesInAdverts { get; set; }
+        public DbSet<ResponseEntity> Responses { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -23,6 +23,7 @@ namespace RentalOfPremises.Infrastructure.MSSQLServer
             modelBuilder.ApplyConfiguration(new PremiseConfiguration());
             modelBuilder.ApplyConfiguration(new AdvertConfiguration());
             modelBuilder.ApplyConfiguration(new ResponseConfiguration());
+            modelBuilder.ApplyConfiguration(new ImagesInAdvertsConfiguration());
 
             base.OnModelCreating(modelBuilder);
         }

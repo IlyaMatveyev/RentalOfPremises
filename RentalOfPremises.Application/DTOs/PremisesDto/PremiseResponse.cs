@@ -1,6 +1,6 @@
 ﻿using RentalOfPremises.Domain.Models;
 
-namespace RentalOfPremises.Application.DTOs
+namespace RentalOfPremises.Application.DTOs.PremisesDto
 {
     public class PremiseResponse
     {

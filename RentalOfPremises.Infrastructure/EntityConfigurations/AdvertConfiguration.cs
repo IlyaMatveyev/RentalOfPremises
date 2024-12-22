@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using RentalOfPremises.Domain.Models;
 using RentalOfPremises.Infrastructure.Entities;
 
 namespace RentalOfPremises.Infrastructure.EntityConfigurations
@@ -13,6 +12,11 @@ namespace RentalOfPremises.Infrastructure.EntityConfigurations
 
             builder.Property(p => p.Label).IsRequired().HasMaxLength(128);
             builder.Property(e => e.Description).IsRequired().HasMaxLength(2048);
+
+            builder.Property(e => e.Price).HasPrecision(10, 2);
+
+            builder.Property(e => e.MainImageUrl);
+            builder.Property(e => e.IsPublished).IsRequired();
 
 
 

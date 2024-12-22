@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace RentalOfPremises.Application.DTOs
+namespace RentalOfPremises.Application.DTOs.UserDto
 {
     public class UserLoginRequest
     {

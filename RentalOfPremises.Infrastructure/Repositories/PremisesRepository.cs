@@ -114,7 +114,7 @@ namespace RentalOfPremises.Infrastructure.Repositories
         /// <summary>
         /// Метод изменения информации о помещении
         /// </summary>
-        /// <param name="id">Идентификатор помещения, которое изменяем</param>
+        /// <param name="premisesId">Идентификатор помещения, которое изменяем</param>
         /// <param name="premises">Обновлённая информация о помещении</param>
         /// <returns name="Guid">ID обновлённой записи</returns>
         /// <exception cref="NotImplementedException"></exception>
@@ -138,6 +138,14 @@ namespace RentalOfPremises.Infrastructure.Repositories
             return premisesId;
         }
 
+        /// <summary>
+        /// Метод изменения ImageUrl в БД
+        /// </summary>
+        /// <param name="premisesId">Id изменяемого помещения</param>
+        /// <param name="newImageUrl">Url нового изображения</param>
+        /// <returns name="premisesId">Id изменяемого помещения</returns>
+        /// <exception cref="KeyNotFoundException">В случае если объект не был найден. 
+        /// Или при обработке запроса произошла ошибка на стороне БД.</exception>
         public async Task<Guid> UpdateMainImage(Guid premisesId, string newImageUrl)
         {
             var countOfUpdatedRows = await _dbContext.Premises

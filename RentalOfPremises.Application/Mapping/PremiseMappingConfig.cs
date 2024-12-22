@@ -1,5 +1,5 @@
 ﻿using Mapster;
-using RentalOfPremises.Application.DTOs;
+using RentalOfPremises.Application.DTOs.PremisesDto;
 using RentalOfPremises.Domain.Models;
 
 namespace RentalOfPremises.Application.Mapping

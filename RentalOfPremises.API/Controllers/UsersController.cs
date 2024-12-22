@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using RentalOfPremises.Application.DTOs;
+using RentalOfPremises.Application.DTOs.UserDto;
 using RentalOfPremises.Application.Interfaces;
 
 namespace RentalOfPremises.API.Controllers

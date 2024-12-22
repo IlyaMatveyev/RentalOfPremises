@@ -48,7 +48,7 @@ namespace RentalOfPremises.API
 
 
             //–егистраци€ зависимостей
-            builder.Services.AddScoped<IUserService, UserService>();
+            builder.Services.AddScoped<IUserService, UsersService>();
             builder.Services.AddScoped<IUserRepository, UserRepository>();
 
             builder.Services.AddScoped<IJWTProvider, JWTProvider>();
@@ -59,13 +59,8 @@ namespace RentalOfPremises.API
             builder.Services.AddScoped<IPremisesService, PremisesService>();
             builder.Services.AddScoped<IPremisesRepository, PremisesRepository>();
 
-            //builder.Services.AddTransient<IImageStorage, CloudinaryImageStorage>();
-
-            /*//явные лимиты дл€ обработки файлов
-            builder.Services.Configure<FormOptions>(options =>
-            {
-                options.MultipartBodyLengthLimit = 10485760; // 10 MB
-            });*/
+            builder.Services.AddScoped<IAdvertsService, AdvertsService>();
+            builder.Services.AddScoped<IAdvertsRepository, AdvertsRepository>();
 
 
             var app = builder.Build();
@@ -77,7 +72,6 @@ namespace RentalOfPremises.API
                 app.UseSwaggerUI();
             }
 
-            //app.UseCors("AllowAll");
 
             app.UseMiddleware<ExceptionHandlingMiddleware>();
 

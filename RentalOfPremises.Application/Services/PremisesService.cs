@@ -54,7 +54,6 @@ namespace RentalOfPremises.Application.Services
 
         public async Task<int> Delete(Guid premisesId)
         {
-            //TODO: Тут нужно будет вытащить Premis по id и проверить OwnerId с userId
             var countOfDelitedObjects = await _premiseRepository.Delete(premisesId);
 
             return countOfDelitedObjects;

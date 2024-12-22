@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RentalOfPremises.Infrastructure.MSSQLServer;
 
@@ -11,9 +12,11 @@ using RentalOfPremises.Infrastructure.MSSQLServer;
 namespace RentalOfPremises.Infrastructure.Migrations
 {
     [DbContext(typeof(RentalOfPremisesDbContext))]
-    partial class RentalOfPremisesDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241219112037_add_PriceField_and_images_for_Advert")]
+    partial class add_PriceField_and_images_for_Advert
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -32,9 +35,6 @@ namespace RentalOfPremises.Infrastructure.Migrations
                         .IsRequired()
                         .HasMaxLength(2048)
                         .HasColumnType("nvarchar(2048)");
-
-                    b.Property<bool>("IsPublished")
-                        .HasColumnType("bit");
 
                     b.Property<string>("Label")
                         .IsRequired()

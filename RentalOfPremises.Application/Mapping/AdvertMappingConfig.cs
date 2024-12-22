@@ -1,4 +1,6 @@
 ﻿using Mapster;
+using RentalOfPremises.Application.DTOs.AdvertDto;
+using RentalOfPremises.Domain.Models;
 
 namespace RentalOfPremises.Application.Mapping
 {
@@ -6,21 +8,30 @@ namespace RentalOfPremises.Application.Mapping
     {
         public void Register(TypeAdapterConfig config)
         {
-            //Тут будет маппинг из DTO в Model и наоборот
+            //AdvertCreateRequest -> Advert
+            TypeAdapterConfig<AdvertCreateRequest, Advert>
+                .NewConfig()
+                .Map(dest => dest.Label, src => src.Label)
+                .Map(dest => dest.Description, src => src.Description)
+                .Map(dest => dest.Price, src => src.Price)
+                .Map(dest => dest.PremiseId, src => src.PremiseId)
+                .MaxDepth(2);
 
-
-            /*TypeAdapterConfig<AdvertEntity, Advert>
+            TypeAdapterConfig<Advert, AdvertFullInfoResponse>
                 .NewConfig()
                 .Map(dest => dest.Id, src => src.Id)
                 .Map(dest => dest.Label, src => src.Label)
                 .Map(dest => dest.Description, src => src.Description)
-                .Map(dest => dest.Responses, src => src.Responses)
-                .Map(dest => dest.Owner, src => src.Owner)
+                .Map(dest => dest.Price, src => src.Price)
+                .Map(dest => dest.IsPublished, src => src.IsPublished)
+                .Map(dest => dest.MainImageUrl, src => src.MainImageUrl)
+                .Map(dest => dest.ListImageUrl, src => src.ListImageUrl)
+                .Map(dest => dest.CountResponses, src => src.Responses != null ? src.Responses.Count : 0)
                 .Map(dest => dest.OwnerId, src => src.OwnerId)
-                .Map(dest => dest.Premise, src => src.Premise)
-                .Map(dest => dest.Premise, src => src.Premise)
+                .Map(dest => dest.OwnerName, src => src.Owner.UserName)
                 .Map(dest => dest.PremiseId, src => src.PremiseId)
-                .TwoWays();*/
+                .Map(dest => dest.Premise, src => src.Premise)
+                .MaxDepth(2);
 
         }
     }

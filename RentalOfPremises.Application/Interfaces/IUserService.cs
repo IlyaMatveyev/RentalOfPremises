@@ -1,4 +1,4 @@
-﻿using RentalOfPremises.Application.DTOs;
+﻿using RentalOfPremises.Application.DTOs.UserDto;
 using RentalOfPremises.Domain.Models;
 
 namespace RentalOfPremises.Application.Interfaces

@@ -22,7 +22,7 @@ namespace RentalOfPremises.API.Extensions
             }
             catch(KeyNotFoundException ex)
             {
-                await HandleExceptionAsync(context, ex.Message, HttpStatusCode.InternalServerError, "Запись не найдена!");
+                await HandleExceptionAsync(context, ex.Message, HttpStatusCode.NotFound, "Запись не найдена!");
             }
             catch (Exception ex)
             {

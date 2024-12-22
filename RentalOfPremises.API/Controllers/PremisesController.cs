@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using RentalOfPremises.API.Extensions;
-using RentalOfPremises.Application.DTOs;
+using RentalOfPremises.Application.DTOs.PremisesDto;
 using RentalOfPremises.Application.Interfaces;
 using RentalOfPremises.Domain.Models;
 
@@ -16,7 +16,6 @@ namespace RentalOfPremises.API.Controllers
     {
         private readonly IMapper _mapper;
         private readonly IPremisesService _premiseService;
-        private readonly IImageStorage _imageStorage;
         public PremisesController(
             IPremisesService premiseService, 
             IMapper mapper,
@@ -24,7 +23,6 @@ namespace RentalOfPremises.API.Controllers
         {
             _mapper = mapper;
             _premiseService = premiseService;
-            _imageStorage = imageStorage;
         }
 
         [HttpPost("Add")]
