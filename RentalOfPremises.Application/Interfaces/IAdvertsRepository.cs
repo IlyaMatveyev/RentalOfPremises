@@ -6,5 +6,7 @@ namespace RentalOfPremises.Application.Interfaces
     {
         Task<Guid> Add(Advert advert);
         Task<Advert> ReadById(Guid advertId, Guid? userId = null);
+
+        Task<int> Delete(Guid advertId);
     }
 }

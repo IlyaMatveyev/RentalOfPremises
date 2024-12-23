@@ -46,14 +46,6 @@ namespace RentalOfPremises.API.Controllers
         {
             //Достаём userId из клеймов с помощью Extension метода
             var userId = HttpContext.GetUserId();
-            if (userId == Guid.Empty)
-            {
-                return Unauthorized(new
-                {
-                    error = "Unauthorized",
-                    message = "User ID is not valid or missing."
-                });
-            }
 
             //mapping
             var advertModel = _mapper.Map<Advert>(advertCreateRequest);
@@ -66,17 +58,6 @@ namespace RentalOfPremises.API.Controllers
         [HttpGet("MyAdverts/{advertId:guid}")]
         public async Task<ActionResult<AdvertFullInfoResponse>> GetMyAdvertById([FromRoute] Guid advertId)
         {
-            //Достаём userId из клеймов с помощью Extension метода
-            var userId = HttpContext.GetUserId();
-            if (userId == Guid.Empty)
-            {
-                return Unauthorized(new
-                {
-                    error = "Unauthorized",
-                    message = "User ID is not valid or missing."
-                });
-            }
-
             return await _advertsService.GetById_ForOwner(advertId);
         }
 
@@ -84,24 +65,21 @@ namespace RentalOfPremises.API.Controllers
         [HttpGet("publishedAdverts/{advertId:guid}")]
         public async Task<ActionResult<AdvertFullInfoResponse>> GetById([FromRoute] Guid advertId)
         {
-            //Достаём userId из клеймов с помощью Extension метода
-            var userId = HttpContext.GetUserId();
-            if (userId == Guid.Empty)
-            {
-                return Unauthorized(new
-                {
-                    error = "Unauthorized",
-                    message = "User ID is not valid or missing."
-                });
-            }
-
             return await _advertsService.GetById(advertId);
         }
+
+        [Authorize]
+        [HttpDelete("{advertId:guid}")]
+        public async Task<ActionResult<int>> Delete([FromRoute] Guid advertId)
+        {
+            return await _advertsService.Delete(advertId);
+        }
+
 
         /*
          Методы:
          1) Добавить объявление для Premises (помнить о связи 1:1)  +
-         2) Удалить объявление для Premises
+         2) Удалить объявление для Premises                         + (но надо будет удалять ещё и фото из облака)
          3) Посмотреть все свои объявления
          4) Посмотреть своё объявление по ID                        +
          5) Посмотреть чужое опубликованое объявление по ID         + (но надо будет протестить)

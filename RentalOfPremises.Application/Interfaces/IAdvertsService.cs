@@ -9,5 +9,7 @@ namespace RentalOfPremises.Application.Interfaces
 
         Task<AdvertFullInfoResponse> GetById_ForOwner(Guid advertId);
         Task<AdvertFullInfoResponse> GetById(Guid advertId);
+
+        Task<int> Delete(Guid advertId);
     }
 }

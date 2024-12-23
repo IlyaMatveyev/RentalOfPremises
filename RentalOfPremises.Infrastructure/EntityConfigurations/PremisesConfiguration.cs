@@ -5,7 +5,7 @@ using RentalOfPremises.Infrastructure.Entities;
 
 namespace RentalOfPremises.Infrastructure.EntityConfigurations
 {
-    public class PremiseConfiguration : IEntityTypeConfiguration<PremiseEntity>
+    public class PremisesConfiguration : IEntityTypeConfiguration<PremiseEntity>
     {
         public void Configure(EntityTypeBuilder<PremiseEntity> builder)
         {

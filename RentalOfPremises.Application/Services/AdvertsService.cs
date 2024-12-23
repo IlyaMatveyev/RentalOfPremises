@@ -42,5 +42,11 @@ namespace RentalOfPremises.Application.Services
             //mapping
             return _mapper.Map<AdvertFullInfoResponse>(advertModel);
         }
+
+        public Task<int> Delete(Guid advertId)
+        {
+            //TODO: Прописать удаление всех фоток из облака
+            return _advertsRepository.Delete(advertId);
+        }
     }
 }

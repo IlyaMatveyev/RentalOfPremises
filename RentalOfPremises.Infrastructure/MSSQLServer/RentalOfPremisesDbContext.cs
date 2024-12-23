@@ -20,7 +20,7 @@ namespace RentalOfPremises.Infrastructure.MSSQLServer
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfiguration(new UserConfiguration());
-            modelBuilder.ApplyConfiguration(new PremiseConfiguration());
+            modelBuilder.ApplyConfiguration(new PremisesConfiguration());
             modelBuilder.ApplyConfiguration(new AdvertConfiguration());
             modelBuilder.ApplyConfiguration(new ResponseConfiguration());
             modelBuilder.ApplyConfiguration(new ImagesInAdvertsConfiguration());
