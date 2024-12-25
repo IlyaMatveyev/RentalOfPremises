@@ -9,6 +9,7 @@ namespace RentalOfPremises.Application.DTOs.UserDto
         [Required]
         public string Password { get; set; }
         [Required]
+        [MaxLength(16)]
         public string UserName { get; set; }
     }
 }

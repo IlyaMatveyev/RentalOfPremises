@@ -11,5 +11,7 @@ namespace RentalOfPremises.Application.Interfaces
         Task<AdvertFullInfoResponse> GetById(Guid advertId);
 
         Task<int> Delete(Guid advertId);
+
+        Task<Guid> PublishUnpublish(Guid advertId);
     }
 }

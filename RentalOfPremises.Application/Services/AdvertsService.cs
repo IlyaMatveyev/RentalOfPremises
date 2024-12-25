@@ -48,5 +48,10 @@ namespace RentalOfPremises.Application.Services
             //TODO: Прописать удаление всех фоток из облака
             return _advertsRepository.Delete(advertId);
         }
+
+        public async Task<Guid> PublishUnpublish(Guid advertId)
+        {
+            return await _advertsRepository.PublishUnpublish(advertId);
+        }
     }
 }

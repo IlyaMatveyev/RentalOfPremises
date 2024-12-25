@@ -96,5 +96,20 @@ namespace RentalOfPremises.Infrastructure.Repositories
 
             return countOfDdeletedRows;
         }
+
+        public async Task<Guid> PublishUnpublish(Guid advertId)
+        {
+            var countOfUpdatedRows = await _dbContext.Adverts
+                .Where(a => a.OwnerId == _currentUserContext.UserId && a.Id == advertId)
+                .ExecuteUpdateAsync(setPropertyCalls => setPropertyCalls
+                                    .SetProperty(a => a.IsPublished, a=> !a.IsPublished));
+
+            if(countOfUpdatedRows == 0)
+            {
+                throw new KeyNotFoundException("Error when trying to change the info (Publish/Unpublish) of the Advert object.");
+            }
+
+            return advertId;
+        }
     }
 }

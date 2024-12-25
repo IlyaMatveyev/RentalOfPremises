@@ -42,7 +42,7 @@ namespace RentalOfPremises.API.Controllers
 
         [Authorize]
         [HttpPost("Create")]
-        public async Task<ActionResult<Guid>> Create(AdvertCreateRequest advertCreateRequest)
+        public async Task<ActionResult<Guid>> Create([FromBody] AdvertCreateRequest advertCreateRequest)
         {
             //Достаём userId из клеймов с помощью Extension метода
             var userId = HttpContext.GetUserId();
@@ -75,6 +75,12 @@ namespace RentalOfPremises.API.Controllers
             return await _advertsService.Delete(advertId);
         }
 
+        [Authorize]
+        [HttpPatch("PublishUnpublish/{advertId:guid}")]
+        public async Task<ActionResult<Guid>> PublishUnpublish([FromRoute] Guid advertId)
+        {
+            return await _advertsService.PublishUnpublish(advertId);
+        }
 
         /*
          Методы:
