@@ -83,6 +83,21 @@ namespace RentalOfPremises.Infrastructure.Repositories
             return _mapper.Map<Advert>(advertEntity);
         }
 
+        public async Task<Guid> UpdateMainImage(string mainImageUrl, Guid advertId)
+        {
+            var countUpdatedRows = await _dbContext.Adverts
+                .Where(a => a.OwnerId == _currentUserContext.UserId && a.Id == advertId)
+                .ExecuteUpdateAsync(prop => prop
+                .SetProperty(a => a.MainImageUrl, mainImageUrl));
+
+            if (countUpdatedRows < 1)
+            {
+                throw new KeyNotFoundException("Error when trying to change the MainImageUrl of the Advert object.");
+            }
+
+            return advertId;
+        }
+
         public async Task<int> Delete(Guid advertId)
         {
             var countOfDdeletedRows = await _dbContext.Adverts
@@ -91,7 +106,7 @@ namespace RentalOfPremises.Infrastructure.Repositories
 
             if(countOfDdeletedRows == 0)
             {
-                throw new KeyNotFoundException();
+                throw new KeyNotFoundException("Error when trying to delete the Advert object.");
             }
 
             return countOfDdeletedRows;

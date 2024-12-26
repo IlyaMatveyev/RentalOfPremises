@@ -4,8 +4,7 @@ namespace RentalOfPremises.Application.Interfaces
 {
     public interface IImageStorage
     {
-        //методы для MainImage в Premises
-        public Task<string> AddPremisesMainImage(IFormFile image, string path);
+        public Task<string> UploadImage(IFormFile image, string path);
         public Task<bool> DeleteImageByUrl(string imageUrl, Guid userId);
 
         //методы для Advert:

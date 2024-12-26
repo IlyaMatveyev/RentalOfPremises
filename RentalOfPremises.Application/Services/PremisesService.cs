@@ -31,7 +31,7 @@ namespace RentalOfPremises.Application.Services
             {
                 if (_imageStorage.ValidateImageFile(mainImage))
                 {
-                    var imageUrl = await _imageStorage.AddPremisesMainImage(mainImage, $"{_currentUserContext.UserId}/premises");
+                    var imageUrl = await _imageStorage.UploadImage(mainImage, $"{_currentUserContext.UserId}/premises");
                     premises.MainImageUrl = imageUrl;
                 }
             }
@@ -72,7 +72,7 @@ namespace RentalOfPremises.Application.Services
             {
                 await _imageStorage.DeleteImageByUrl(premises.MainImageUrl, _currentUserContext.UserId);
             }
-            var imageUrl = await _imageStorage.AddPremisesMainImage(newImage, $"{_currentUserContext.UserId}/premises");
+            var imageUrl = await _imageStorage.UploadImage(newImage, $"{_currentUserContext.UserId}/premises");
             await _premiseRepository.UpdateMainImage(premisesId, imageUrl);
 
             return premises.Id;

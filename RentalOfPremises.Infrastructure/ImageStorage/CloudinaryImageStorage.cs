@@ -28,7 +28,7 @@ namespace RentalOfPremises.Infrastructure.ImageStorage
 
         }
 
-        public async Task<string> AddPremisesMainImage(IFormFile image, string path)
+        public async Task<string> UploadImage(IFormFile image, string path)
         {
             using var stream = image.OpenReadStream();
             var uploadParams = new ImageUploadParams

@@ -10,5 +10,7 @@ namespace RentalOfPremises.Application.Interfaces
         Task<int> Delete(Guid advertId);
 
         Task<Guid> PublishUnpublish(Guid advertId);
+
+        Task<Guid> UpdateMainImage(string mainImageUrl, Guid advertId);
     }
 }

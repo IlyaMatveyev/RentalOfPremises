@@ -82,6 +82,13 @@ namespace RentalOfPremises.API.Controllers
             return await _advertsService.PublishUnpublish(advertId);
         }
 
+
+        [Authorize]
+        [HttpPatch("UploadMainImage/{advertId:guid}")]
+        public async Task<ActionResult<Guid>> UploadMainImage([FromForm] AdvertMainImageRequest request, [FromRoute]Guid advertId)
+        {
+            return await _advertsService.UploadMainImage(request.Image, advertId);
+        }
         /*
          Методы:
          1) Добавить объявление для Premises (помнить о связи 1:1)  +
@@ -92,7 +99,7 @@ namespace RentalOfPremises.API.Controllers
          6) Изменить информацию в своём объявлении
 
          Работа с фото отдельно:
-         5) Добавить mainImage в объявление
+         5) Добавить mainImage в объявление                         + (ПРОТЕСТИТЬ)
          6) Поменять mainImage в объявлении
          7) Удалить mainImage в объявлении
          
