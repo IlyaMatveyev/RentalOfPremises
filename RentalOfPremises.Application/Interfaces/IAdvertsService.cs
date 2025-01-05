@@ -17,8 +17,11 @@ namespace RentalOfPremises.Application.Interfaces
 
         Task<Guid> PublishUnpublish(Guid advertId);
 
-        Task<Guid> UploadMainImage(IFormFile mainImage, Guid advertId);
 
+
+        Task<Guid> UploadMainImage(IFormFile mainImage, Guid advertId);
+        Task<Guid> UpdateMainImage(IFormFile newMainImage, Guid advertId);
+        Task<Guid> DeleteMainImage(Guid advertId);
 
     }
 }

@@ -82,20 +82,36 @@ namespace RentalOfPremises.API.Controllers
             return await _advertsService.PublishUnpublish(advertId);
         }
 
-
-        [Authorize]
-        [HttpPatch("UploadMainImage/{advertId:guid}")]
-        public async Task<ActionResult<Guid>> UploadMainImage([FromForm] AdvertMainImageRequest request, [FromRoute]Guid advertId)
-        {
-            return await _advertsService.UploadMainImage(request.Image, advertId);
-        }
-
         [Authorize]
         [HttpPatch("UpdateInfo/{advertId:guid}")]
         public async Task<ActionResult<Guid>> UpdateInfo([FromBody] AdvertUpdateInfoRequest advertRequest, [FromRoute] Guid advertId)
         {
             return await _advertsService.UpdateInfo(advertRequest, advertId);
         }
+
+        //==============Work with mainImage===================
+        [Authorize]
+        [HttpPatch("AddMainImage/{advertId:guid}")]
+        public async Task<ActionResult<Guid>> UploadMainImage([FromForm] AdvertMainImageRequest request, [FromRoute]Guid advertId)
+        {
+            return await _advertsService.UploadMainImage(request.Image, advertId);
+        }
+
+        [Authorize]
+        [HttpPatch("UpdateMainImage/{advertId:guid}")]
+        public async Task<ActionResult<Guid>> UpdateMainImage([FromForm] AdvertMainImageRequest request, [FromRoute] Guid advertId)
+        {
+            return await _advertsService.UpdateMainImage(request.Image, advertId);
+        }
+
+        [Authorize]
+        [HttpPatch("DeleteMainImage/{advertId:guid}")]
+        public async Task<ActionResult<Guid>> DeleteMainImage([FromRoute] Guid advertId)
+        {
+            return await _advertsService.DeleteMainImage(advertId);
+        }
+
+
         /*
          Методы:
          1) Добавить объявление для Premises (помнить о связи 1:1)  +
@@ -104,7 +120,7 @@ namespace RentalOfPremises.API.Controllers
         3+) Посмотреть все опубликованные объявления
          4) Посмотреть своё объявление по ID                        +
          5) Посмотреть чужое опубликованое объявление по ID         +
-         6) Изменить информацию в своём объявлении
+         6) Изменить информацию в своём объявлении                  +
 
          Работа с фото отдельно:
          5) Добавить mainImage в объявление                         +

@@ -58,6 +58,15 @@ namespace RentalOfPremises.Application.Services
             return await _advertsRepository.PublishUnpublish(advertId);
         }
 
+        public async Task<Guid> UpdateInfo(AdvertUpdateInfoRequest advertRequest, Guid advertId)
+        {
+            var advert = _mapper.Map<Advert>(advertRequest);
+
+            return await _advertsRepository.UpdateInfo(advert, advertId);
+        }
+
+
+
         //добавление главного фото Объявления
         public async Task<Guid> UploadMainImage(IFormFile mainImage, Guid advertId)
         {
@@ -71,11 +80,42 @@ namespace RentalOfPremises.Application.Services
             return await _advertsRepository.UpdateMainImage(imageUrl, advertId);
         }
 
-        public async Task<Guid> UpdateInfo(AdvertUpdateInfoRequest advertRequest, Guid advertId)
+        //замена главного фото Объявления
+        public async Task<Guid> UpdateMainImage(IFormFile newMainImage, Guid advertId)
         {
-            var advert = _mapper.Map<Advert>(advertRequest);
+            if (!_imageStorage.ValidateImageFile(newMainImage))
+            {
+                throw new Exception("Invalid file!");
+            }
 
-            return await _advertsRepository.UpdateInfo(advert, advertId);
+            var advert = await _advertsRepository.ReadById(advertId, _currentUserContext.UserId);
+
+            if (!string.IsNullOrEmpty(advert.MainImageUrl))
+            {
+                await _imageStorage.DeleteImageByUrl(advert.MainImageUrl, _currentUserContext.UserId);
+            }
+
+            var imageUrl = await _imageStorage.UploadImage(newMainImage, $"{_currentUserContext.UserId}/Adverts/{advertId}");
+
+            return await _advertsRepository.UpdateMainImage(imageUrl, advertId);
+        }
+
+        //удаление главного фото Объявления
+        public async Task<Guid> DeleteMainImage(Guid advertId)
+        {
+            var advert = await _advertsRepository.ReadById(advertId, _currentUserContext.UserId);
+
+            if (string.IsNullOrEmpty(advert.MainImageUrl))
+            {
+                return advertId;
+            }
+
+            var isDeleted = await _imageStorage.DeleteImageByUrl(advert.MainImageUrl, _currentUserContext.UserId);
+            if (isDeleted)
+            {
+                return await _advertsRepository.UpdateMainImage(string.Empty, advertId);
+            }
+            return Guid.Empty;
         }
     }
 }

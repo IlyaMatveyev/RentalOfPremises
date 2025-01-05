@@ -48,6 +48,13 @@ namespace RentalOfPremises.Infrastructure.ImageStorage
 
             var deleteParams = new DeletionParams(publicId);
             var result = await _cloudinary.DestroyAsync(deleteParams);
+
+            if (result.Result != "ok")
+            {
+                //TODO: Написать свои кастомные исключения
+                throw new InvalidOperationException("Cloudinary operation exception!");
+            }
+
             return result.Result == "ok";
         }
 
