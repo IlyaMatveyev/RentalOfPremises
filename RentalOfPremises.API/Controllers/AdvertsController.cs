@@ -89,17 +89,25 @@ namespace RentalOfPremises.API.Controllers
         {
             return await _advertsService.UploadMainImage(request.Image, advertId);
         }
+
+        [Authorize]
+        [HttpPatch("UpdateInfo/{advertId:guid}")]
+        public async Task<ActionResult<Guid>> UpdateInfo([FromBody] AdvertUpdateInfoRequest advertRequest, [FromRoute] Guid advertId)
+        {
+            return await _advertsService.UpdateInfo(advertRequest, advertId);
+        }
         /*
          Методы:
          1) Добавить объявление для Premises (помнить о связи 1:1)  +
          2) Удалить объявление для Premises                         + (но надо будет удалять ещё и фото из облака)
          3) Посмотреть все свои объявления
+        3+) Посмотреть все опубликованные объявления
          4) Посмотреть своё объявление по ID                        +
-         5) Посмотреть чужое опубликованое объявление по ID         + (но надо будет протестить)
+         5) Посмотреть чужое опубликованое объявление по ID         +
          6) Изменить информацию в своём объявлении
 
          Работа с фото отдельно:
-         5) Добавить mainImage в объявление                         + (ПРОТЕСТИТЬ)
+         5) Добавить mainImage в объявление                         +
          6) Поменять mainImage в объявлении
          7) Удалить mainImage в объявлении
          
@@ -111,7 +119,7 @@ namespace RentalOfPremises.API.Controllers
 
 
          Доп.:
-         12) Опубликовать/скрыть объявление из общего доступа
+         12) Опубликовать/скрыть объявление из общего доступа       +
          */
     }
 }

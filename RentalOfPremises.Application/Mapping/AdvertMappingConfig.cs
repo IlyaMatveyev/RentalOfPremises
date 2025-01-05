@@ -33,6 +33,12 @@ namespace RentalOfPremises.Application.Mapping
                 .Map(dest => dest.Premise, src => src.Premise)
                 .MaxDepth(2);
 
+            TypeAdapterConfig<AdvertUpdateInfoRequest, Advert>
+                .NewConfig()
+                .Map(dest => dest.Label, src => src.Label)
+                .Map(dest => dest.Description, src => src.Description)
+                .Map(dest => dest.Price, src => src.Price)
+                .MaxDepth(2);
         }
     }
 }

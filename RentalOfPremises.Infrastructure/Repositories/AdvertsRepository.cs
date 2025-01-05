@@ -126,5 +126,23 @@ namespace RentalOfPremises.Infrastructure.Repositories
 
             return advertId;
         }
+
+        public async Task<Guid> UpdateInfo(Advert advert, Guid advertId)
+        {
+            var countOfUpdatedRows = await _dbContext.Adverts
+                .Where(a => a.OwnerId == _currentUserContext.UserId && a.Id == advertId)
+                .ExecuteUpdateAsync(prop => prop
+                .SetProperty(a => a.Label, advert.Label)
+                .SetProperty(a=>a.Description, advert.Description)
+                .SetProperty(a=>a.Price, advert.Price));
+
+            if(countOfUpdatedRows < 1)
+            {
+                throw new KeyNotFoundException("Error when trying to change the info of the Advert object.");
+            }
+
+
+            return advertId;
+        }
     }
 }

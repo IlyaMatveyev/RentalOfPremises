@@ -70,5 +70,12 @@ namespace RentalOfPremises.Application.Services
 
             return await _advertsRepository.UpdateMainImage(imageUrl, advertId);
         }
+
+        public async Task<Guid> UpdateInfo(AdvertUpdateInfoRequest advertRequest, Guid advertId)
+        {
+            var advert = _mapper.Map<Advert>(advertRequest);
+
+            return await _advertsRepository.UpdateInfo(advert, advertId);
+        }
     }
 }

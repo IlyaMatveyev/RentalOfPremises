@@ -7,6 +7,8 @@ namespace RentalOfPremises.Application.Interfaces
         Task<Guid> Add(Advert advert);
         Task<Advert> ReadById(Guid advertId, Guid? userId = null);
 
+        Task<Guid> UpdateInfo(Advert advert, Guid advertId);
+
         Task<int> Delete(Guid advertId);
 
         Task<Guid> PublishUnpublish(Guid advertId);
