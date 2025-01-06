@@ -1,10 +1,12 @@
-﻿using RentalOfPremises.Domain.Models;
+﻿using RentalOfPremises.Application.DTOs.Pagination;
+using RentalOfPremises.Domain.Models;
 
 namespace RentalOfPremises.Application.Interfaces
 {
     public interface IAdvertsRepository
     {
         Task<Guid> Add(Advert advert);
+        Task<PaginatedResult<Advert>> ReadAll(PaginationParams paginationParams, Guid? userId = null);
         Task<Advert> ReadById(Guid advertId, Guid? userId = null);
 
         Task<Guid> UpdateInfo(Advert advert, Guid advertId);

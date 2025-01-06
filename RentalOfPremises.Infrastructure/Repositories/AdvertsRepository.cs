@@ -1,5 +1,6 @@
 ﻿using MapsterMapper;
 using Microsoft.EntityFrameworkCore;
+using RentalOfPremises.Application.DTOs.Pagination;
 using RentalOfPremises.Application.Interfaces;
 using RentalOfPremises.Application.Interfaces.Auth;
 using RentalOfPremises.Domain.Models;
@@ -24,6 +25,41 @@ namespace RentalOfPremises.Infrastructure.Repositories
             _mapper = mapper;
         }
 
+        public async Task<PaginatedResult<Advert>>ReadAll(PaginationParams paginationParams, Guid? userId = null)
+        {
+            var query = _dbContext.Adverts.Include(a => a.Premise).AsNoTracking().AsQueryable();
+
+            //реализация для чтения всех опубликованных объявлений
+            if(userId == null)
+            {
+                query = query.Where(a => a.IsPublished == true)
+                    .Skip((paginationParams.PageNumder - 1) * paginationParams.PageSize)
+                    .Take(paginationParams.PageSize);
+            }
+            else //реализация для чтения всех своих объявлений
+            {
+                query = query.Where(a => a.OwnerId == userId)
+                    .Skip((paginationParams.PageNumder - 1) * paginationParams.PageSize)
+                    .Take(paginationParams.PageSize);
+            }
+
+            var listAdvertEntity = await query.ToListAsync();
+            if(listAdvertEntity.Count < 1)
+            {
+                throw new KeyNotFoundException("Adverts not found");
+            }
+
+            var totalCount = await query.CountAsync(); // Общее количество записей
+
+            return new PaginatedResult<Advert> 
+            { 
+                Items = _mapper.Map<List<Advert>>(listAdvertEntity), 
+                TotalCount = totalCount,
+                PageNumder = paginationParams.PageNumder,
+                PageSize = paginationParams.PageSize
+            };
+
+        }
 
         public async Task<Guid> Add(Advert advert)
         {

@@ -1,6 +1,7 @@
 ﻿using MapsterMapper;
 using Microsoft.AspNetCore.Http;
 using RentalOfPremises.Application.DTOs.AdvertDto;
+using RentalOfPremises.Application.DTOs.Pagination;
 using RentalOfPremises.Application.Interfaces;
 using RentalOfPremises.Application.Interfaces.Auth;
 using RentalOfPremises.Domain.Models;
@@ -47,6 +48,34 @@ namespace RentalOfPremises.Application.Services
             return _mapper.Map<AdvertFullInfoResponse>(advertModel);
         }
 
+        public async Task<PaginatedResult<AdvertShortInfoResponse>> GetAll_ForOwner(PaginationParams paginationParams, Guid userId)
+        {
+            var paginatedResultAdvert = await _advertsRepository.ReadAll(paginationParams, userId);
+
+            //mapping
+            return new PaginatedResult<AdvertShortInfoResponse>
+            {
+                Items = _mapper.Map<List<AdvertShortInfoResponse>>(paginatedResultAdvert.Items),
+                TotalCount = paginatedResultAdvert.TotalCount,
+                PageNumder = paginatedResultAdvert.PageNumder,
+                PageSize = paginatedResultAdvert.PageSize
+            };
+        }
+
+        public async Task<PaginatedResult<AdvertShortInfoResponse>> GetAll(PaginationParams paginationParams)
+        {
+            var paginatedResultAdvert = await _advertsRepository.ReadAll(paginationParams);
+
+            //mapping
+            return new PaginatedResult<AdvertShortInfoResponse>
+            {
+                Items = _mapper.Map<List<AdvertShortInfoResponse>>(paginatedResultAdvert.Items),
+                TotalCount = paginatedResultAdvert.TotalCount,
+                PageNumder = paginatedResultAdvert.PageNumder,
+                PageSize = paginatedResultAdvert.PageSize
+            };
+        }
+
         public Task<int> Delete(Guid advertId)
         {
             //TODO: Прописать удаление всех фоток из облака
@@ -66,6 +95,7 @@ namespace RentalOfPremises.Application.Services
         }
 
 
+        //===============Work with MainImage================
 
         //добавление главного фото Объявления
         public async Task<Guid> UploadMainImage(IFormFile mainImage, Guid advertId)
@@ -117,5 +147,7 @@ namespace RentalOfPremises.Application.Services
             }
             return Guid.Empty;
         }
+
+        
     }
 }

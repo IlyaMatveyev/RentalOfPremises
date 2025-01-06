@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using RentalOfPremises.Application.DTOs.AdvertDto;
+using RentalOfPremises.Application.DTOs.Pagination;
 using RentalOfPremises.Domain.Models;
 
 namespace RentalOfPremises.Application.Interfaces
@@ -10,6 +11,9 @@ namespace RentalOfPremises.Application.Interfaces
 
         Task<AdvertFullInfoResponse> GetById_ForOwner(Guid advertId);
         Task<AdvertFullInfoResponse> GetById(Guid advertId);
+
+        Task<PaginatedResult<AdvertShortInfoResponse>> GetAll_ForOwner(PaginationParams paginationParams, Guid userId);
+        Task<PaginatedResult<AdvertShortInfoResponse>> GetAll(PaginationParams paginationParams);
 
         Task<Guid> UpdateInfo(AdvertUpdateInfoRequest advertRequest, Guid advertId);
 

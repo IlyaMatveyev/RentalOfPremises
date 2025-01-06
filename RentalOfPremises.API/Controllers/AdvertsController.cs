@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RentalOfPremises.API.Extensions;
 using RentalOfPremises.Application.DTOs.AdvertDto;
+using RentalOfPremises.Application.DTOs.Pagination;
 using RentalOfPremises.Application.Interfaces;
 using RentalOfPremises.Domain.Models;
 
@@ -21,24 +22,33 @@ namespace RentalOfPremises.API.Controllers
         }
 
 
-        //TODO: для этого метода надо реализовать паггинацию
-        /*[HttpGet("MyAdverts")]
-        public async Task<ActionResult<List<AdvertShortInfoResponse>>> GetAll()
+        [Authorize]
+        [HttpGet("MyAdverts")]
+        public async Task<PaginatedResult<AdvertShortInfoResponse>> GetAll_ForOwner([FromQuery] int pageNumber, [FromQuery] int pageSize)
         {
             //Достаём userId из клеймов с помощью Extension метода
             var userId = HttpContext.GetUserId();
-            if (userId == Guid.Empty)
+
+            var paginationParams = new PaginationParams
             {
-                return Unauthorized(new
-                {
-                    error = "Unauthorized",
-                    message = "User ID is not valid or missing."
-                });
-            }
+                PageSize = pageSize,
+                PageNumder = pageNumber
+            };
 
-            var listOfAdverts = await _advertsService.GetAll();
+            return await _advertsService.GetAll_ForOwner(paginationParams, userId);
+        }
 
-        }*/
+        [HttpGet("Published")]
+        public async Task<PaginatedResult<AdvertShortInfoResponse>> GetAll([FromQuery] int pageNumber, [FromQuery] int pageSize)
+        {
+            var paginationParams = new PaginationParams
+            {
+                PageSize = pageSize,
+                PageNumder = pageNumber
+            };
+
+            return await _advertsService.GetAll(paginationParams);
+        }
 
         [Authorize]
         [HttpPost("Create")]
@@ -124,8 +134,8 @@ namespace RentalOfPremises.API.Controllers
 
          Работа с фото отдельно:
          5) Добавить mainImage в объявление                         +
-         6) Поменять mainImage в объявлении
-         7) Удалить mainImage в объявлении
+         6) Поменять mainImage в объявлении                         +
+         7) Удалить mainImage в объявлении                          +
          
         Работа с коллекцией фото (возможно вынести в отдельный controller)
          8) Добавить коллекцию фото в объявление
