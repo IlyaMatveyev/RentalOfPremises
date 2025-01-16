@@ -27,5 +27,7 @@ namespace RentalOfPremises.Application.Interfaces
         Task<Guid> UpdateMainImage(IFormFile newMainImage, Guid advertId);
         Task<Guid> DeleteMainImage(Guid advertId);
 
+
+        Task AddImageCollection(Guid advertId, ImageCollectionRequest imageCollectionRequest);
     }
 }

@@ -30,7 +30,7 @@ namespace RentalOfPremises.Infrastructure.ImageStorage
 
         public async Task<string> UploadImage(IFormFile image, string path)
         {
-            using var stream = image.OpenReadStream();
+            /*using var stream = image.OpenReadStream();
             var uploadParams = new ImageUploadParams
             {
                 Folder = path,
@@ -39,6 +39,20 @@ namespace RentalOfPremises.Infrastructure.ImageStorage
             };
 
             var uploadResult = await _cloudinary.UploadAsync(uploadParams);
+            return uploadResult.SecureUrl.ToString();*/
+
+            await using var memoryStream = new MemoryStream(); // Создаём поток в памяти
+            await image.CopyToAsync(memoryStream);             // Копируем содержимое IFormFile в MemoryStream
+            memoryStream.Seek(0, SeekOrigin.Begin);            // Перемещаем указатель потока в начало (сместить указатель на 0 байтов от начала потока)
+
+            var uploadParams = new ImageUploadParams
+            {
+                Folder = path,
+                File = new FileDescription(path, memoryStream),
+                Overwrite = true
+            };
+
+            var uploadResult = await _cloudinary.UploadAsync(uploadParams); // Выполняем загрузку
             return uploadResult.SecureUrl.ToString();
         }
 

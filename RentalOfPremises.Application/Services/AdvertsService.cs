@@ -4,26 +4,30 @@ using RentalOfPremises.Application.DTOs.AdvertDto;
 using RentalOfPremises.Application.DTOs.Pagination;
 using RentalOfPremises.Application.Interfaces;
 using RentalOfPremises.Application.Interfaces.Auth;
+using RentalOfPremises.Application.Interfaces.Queues;
 using RentalOfPremises.Domain.Models;
 
 namespace RentalOfPremises.Application.Services
 {
     public class AdvertsService : IAdvertsService
     {
+        private readonly ICurrentUserContext _currentUserContext;
         private readonly IAdvertsRepository _advertsRepository;
         private readonly IImageStorage _imageStorage;
-        private readonly ICurrentUserContext _currentUserContext;
+        private readonly IImageUploadQueue _imageUploadQueue;
         private readonly IMapper _mapper;
         public AdvertsService(
             IAdvertsRepository advertsRepository,
             IImageStorage imageStorage,
             ICurrentUserContext currentUserContext, 
-            IMapper mapper)
+            IMapper mapper,
+            IImageUploadQueue imageUploadQueue)
         {
             _advertsRepository = advertsRepository;
             _imageStorage = imageStorage;
             _currentUserContext = currentUserContext;
             _mapper = mapper;
+            _imageUploadQueue = imageUploadQueue;
         }
 
         public async Task<Guid> Create(Advert advert)
@@ -148,6 +152,47 @@ namespace RentalOfPremises.Application.Services
             return Guid.Empty;
         }
 
-        
+
+        //===============Work with Image Collection================
+        public async Task AddImageCollection(Guid advertId, ImageCollectionRequest imageCollectionRequest)
+        {
+            if(imageCollectionRequest.Images.Count < 1)
+            {
+                //TODO: можно добавить кастомное исключение
+                throw new ArgumentException("Image collection is empty");
+            }
+
+            //валидация
+            foreach(var image in imageCollectionRequest.Images)
+            {
+                var isValid = _imageStorage.ValidateImageFile(image);
+
+                if (!isValid)
+                {
+                    //TODO: можно добавить кастомное исключение
+                    throw new ArgumentException("File is invalid");
+                }
+            }
+
+            //проверка: принадлежит ли этот Advert пользователю
+            var advert = await _advertsRepository.ReadById(advertId);
+            if (advert.OwnerId == _currentUserContext.UserId)
+            {
+                //Генерируем таски для бекграунд сервиса
+                foreach (var image in imageCollectionRequest.Images)
+                {
+                    _imageUploadQueue.AddTask(
+                        new() { 
+                        AdvertId = advertId, 
+                        ImageFile = image, 
+                        PathInCloud = $"{_currentUserContext.UserId}/Adverts/{advertId}" 
+                        });
+                }
+            }
+
+            
+        }
+
+
     }
 }

@@ -3,8 +3,11 @@ using Microsoft.Extensions.Options;
 using RentalOfPremises.API.Extensions;
 using RentalOfPremises.Application.Interfaces;
 using RentalOfPremises.Application.Interfaces.Auth;
+using RentalOfPremises.Application.Interfaces.Queues;
 using RentalOfPremises.Application.Services;
 using RentalOfPremises.Infrastructure.Auth;
+using RentalOfPremises.Infrastructure.BackgroundProcessing;
+using RentalOfPremises.Infrastructure.BackgroundServices;
 using RentalOfPremises.Infrastructure.ImageStorage;
 using RentalOfPremises.Infrastructure.MSSQLServer;
 using RentalOfPremises.Infrastructure.Repositories;
@@ -61,6 +64,13 @@ namespace RentalOfPremises.API
 
             builder.Services.AddScoped<IAdvertsService, AdvertsService>();
             builder.Services.AddScoped<IAdvertsRepository, AdvertsRepository>();
+
+            builder.Services.AddScoped<IImagesInAdvertRepository, ImagesInAdvertRepository>();
+
+
+            //background процессы
+            builder.Services.AddSingleton<IImageUploadQueue, ImageUploadQueue>();
+            builder.Services.AddHostedService<ImageUploadService>();
 
 
             var app = builder.Build();
