@@ -12,10 +12,10 @@ namespace RentalOfPremises.Application.DTOs.AdvertDto
         public bool IsPublished { get; set; } = false;
 
         //главное фото объявления
-        public string MainImageUrl = string.Empty;
+        public string MainImageUrl { get; set; } = string.Empty;
 
-        //список фото в объявлении
-        public List<ImageInAdvert>? ListImageUrl { get; set; }
+        //коллекция фото
+        public List<string> ImageUrlList { get; set; } = new();
 
         public int CountResponses { get; set; } = 0; //кол-во откликов
 
@@ -23,8 +23,8 @@ namespace RentalOfPremises.Application.DTOs.AdvertDto
         public Guid OwnerId { get; set; }
         public string OwnerName { get; set; } = string.Empty;
 
-        //помещение
+        /*//помещение
         public Guid PremiseId { get; set; }
-        public Premises Premise { get; set; }
+        public Premises Premise { get; set; }*/
     }
 }

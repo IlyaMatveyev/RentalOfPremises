@@ -25,13 +25,14 @@ namespace RentalOfPremises.Application.Mapping
                 .Map(dest => dest.Price, src => src.Price)
                 .Map(dest => dest.IsPublished, src => src.IsPublished)
                 .Map(dest => dest.MainImageUrl, src => src.MainImageUrl)
-                .Map(dest => dest.ListImageUrl, src => src.ListImageUrl)
+                .Map(dest => dest.ImageUrlList, src => src.ListImageUrl.Select(x => x.ImageUrl).ToList())
                 .Map(dest => dest.CountResponses, src => src.Responses != null ? src.Responses.Count : 0)
                 .Map(dest => dest.OwnerId, src => src.OwnerId)
                 .Map(dest => dest.OwnerName, src => src.Owner.UserName)
-                .Map(dest => dest.PremiseId, src => src.PremiseId)
-                .Map(dest => dest.Premise, src => src.Premise)
                 .MaxDepth(2);
+                /*.Map(dest => dest.PremiseId, src => src.PremiseId)
+                .Map(dest => dest.Premise, src => src.Premise)
+                .MaxDepth(2);*/
 
             TypeAdapterConfig<AdvertUpdateInfoRequest, Advert>
                 .NewConfig()
