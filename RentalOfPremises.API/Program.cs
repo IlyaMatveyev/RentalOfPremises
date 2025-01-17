@@ -72,6 +72,10 @@ namespace RentalOfPremises.API
             builder.Services.AddSingleton<IImageUploadQueue, ImageUploadQueue>();
             builder.Services.AddHostedService<ImageUploadService>();
 
+            builder.Services.AddSingleton<IImageDeleteQueue, ImageDeleteQueue>();
+            builder.Services.AddHostedService<ImageDeleteService>();
+
+
 
             var app = builder.Build();
 

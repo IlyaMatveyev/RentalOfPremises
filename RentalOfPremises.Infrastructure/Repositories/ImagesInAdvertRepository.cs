@@ -1,4 +1,5 @@
-﻿using RentalOfPremises.Application.Interfaces;
+﻿using Microsoft.EntityFrameworkCore;
+using RentalOfPremises.Application.Interfaces;
 using RentalOfPremises.Infrastructure.Entities;
 using RentalOfPremises.Infrastructure.MSSQLServer;
 
@@ -21,9 +22,13 @@ namespace RentalOfPremises.Infrastructure.Repositories
             return entity.AdvertId;
         }
 
-        public Task<int> Delete(string imageUrl)
+        public async Task<int> Delete(Guid advertId, string imageUrl)
         {
-            throw new NotImplementedException();
+            var countOfDeletedRows = await _dbContext.ImagesInAdverts
+                .Where(i => i.AdvertId == advertId && i.ImageUrl == imageUrl)
+                .ExecuteDeleteAsync();
+
+            return countOfDeletedRows;
         }
     }
 }

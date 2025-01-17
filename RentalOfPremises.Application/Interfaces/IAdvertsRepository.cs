@@ -16,5 +16,6 @@ namespace RentalOfPremises.Application.Interfaces
         Task<Guid> PublishUnpublish(Guid advertId);
 
         Task<Guid> UpdateMainImage(string mainImageUrl, Guid advertId);
+        Task<List<Advert>> ReadAllNonPaginated(Guid userId);
     }
 }

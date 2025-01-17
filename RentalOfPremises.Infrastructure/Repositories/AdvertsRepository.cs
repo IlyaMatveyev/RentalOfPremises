@@ -61,6 +61,19 @@ namespace RentalOfPremises.Infrastructure.Repositories
 
         }
 
+        public async Task<List<Advert>> ReadAllNonPaginated(Guid userId)
+        {
+            var listAdvertEntity = await _dbContext.Adverts.AsNoTracking().Where(a => a.OwnerId == userId).ToListAsync();
+
+            if (listAdvertEntity.Count < 1)
+            {
+                throw new KeyNotFoundException("Adverts not found");
+            }
+
+            return _mapper.Map<List<Advert>>(listAdvertEntity);
+        }
+
+
         public async Task<Guid> Add(Advert advert)
         {
             var premisesEntity = await _dbContext.Premises

@@ -29,5 +29,6 @@ namespace RentalOfPremises.Application.Interfaces
 
 
         Task AddImageCollection(Guid advertId, ImageCollectionRequest imageCollectionRequest);
+        Task DeleteImageCollection(Guid advertId, ImageUrlCollectionRequest imageUrlCollectionRequest);
     }
 }

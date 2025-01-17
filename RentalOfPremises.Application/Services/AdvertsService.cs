@@ -15,19 +15,22 @@ namespace RentalOfPremises.Application.Services
         private readonly IAdvertsRepository _advertsRepository;
         private readonly IImageStorage _imageStorage;
         private readonly IImageUploadQueue _imageUploadQueue;
+        private readonly IImageDeleteQueue _imageDeleteQueue;
         private readonly IMapper _mapper;
         public AdvertsService(
             IAdvertsRepository advertsRepository,
             IImageStorage imageStorage,
             ICurrentUserContext currentUserContext, 
             IMapper mapper,
-            IImageUploadQueue imageUploadQueue)
+            IImageUploadQueue imageUploadQueue,
+            IImageDeleteQueue imageDeleteQueue)
         {
             _advertsRepository = advertsRepository;
             _imageStorage = imageStorage;
             _currentUserContext = currentUserContext;
             _mapper = mapper;
             _imageUploadQueue = imageUploadQueue;
+            _imageDeleteQueue = imageDeleteQueue;
         }
 
         public async Task<Guid> Create(Advert advert)
@@ -189,8 +192,28 @@ namespace RentalOfPremises.Application.Services
                         });
                 }
             }
+        }
 
+        public async Task DeleteImageCollection(Guid advertId ,ImageUrlCollectionRequest imageUrlCollectionRequest)
+        {
+            var advertsOfCurrentUser = await _advertsRepository.ReadAllNonPaginated(_currentUserContext.UserId);
+
+            //проверка принадлежит ли Advert этому пользователю
+            if (advertsOfCurrentUser.FirstOrDefault(x => x.Id == advertId) == null)
+            {
+                throw new KeyNotFoundException("Advert with this Id is not found");
+            }
             
+            //генерация тасок
+            foreach(var url in imageUrlCollectionRequest.Urls)
+            {
+                _imageDeleteQueue.AddTask(
+                    new() { 
+                        AdvertId = advertId, 
+                        ImageUrl = url, 
+                        UserId = _currentUserContext.UserId
+                    });
+            }
         }
 
 

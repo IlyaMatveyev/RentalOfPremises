@@ -131,14 +131,23 @@ namespace RentalOfPremises.API.Controllers
             return Ok("The images will be uploaded soon.");
         }
 
+        [Authorize]
+        [HttpDelete("{advertId:guid}/delete-images")]
+        public async Task<ActionResult> DeleteImages([FromRoute] Guid advertId, [FromBody] ImageUrlCollectionRequest request)
+        {
+            await _advertsService.DeleteImageCollection(advertId, request);
+
+            return Ok("The images will be deleted soon.");
+        }
+
         /*
          Методы:
          1) Добавить объявление для Premises (помнить о связи 1:1)  +
          2) Удалить объявление для Premises                         + (но надо будет удалять ещё и фото из облака)
          3) Посмотреть все свои объявления                          +
         3+) Посмотреть все опубликованные объявления                +
-         4) Посмотреть своё объявление по ID                        + (но надо будет ещё вытягивать коллекцию фото)
-         5) Посмотреть чужое опубликованое объявление по ID         + (но надо будет ещё вытягивать коллекцию фото)
+         4) Посмотреть своё объявление по ID                        +
+         5) Посмотреть чужое опубликованое объявление по ID         +
          6) Изменить информацию в своём объявлении                  +
 
          Работа с фото отдельно:
@@ -148,9 +157,9 @@ namespace RentalOfPremises.API.Controllers
          
         Работа с коллекцией фото (возможно вынести в отдельный controller)
          8) Добавить коллекцию фото в объявление                    +
-         9) Удалить коллекцию фото из объявления
+         9) Удалить коллекцию фото из объявления                    
          10) Дополнить уже имеющуюся коллекцию коллекцией фото      +
-         11) Удалить из коллекции фото коллкцию фото
+         11) Удалить из коллекции фото коллкцию фото                
 
 
          Доп.:
