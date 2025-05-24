@@ -72,6 +72,26 @@ namespace RentalOfPremises.Infrastructure.ImageStorage
             return result.Result == "ok";
         }
 
+        /*public async Task<bool> IsFolderEmpty(string folderPath)
+        {
+            var result = await _cloudinary.ListResourcesAsync(folderPath);
+
+            return result.Resources.Any();
+        }*/
+
+        public async Task<bool> DeleteFolder(string folderPath)
+        {
+            var res = await _cloudinary.DeleteFolderAsync(folderPath);
+
+            if(res.StatusCode == System.Net.HttpStatusCode.OK)
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+
         public bool ValidateImageFile(IFormFile image)
         {
             if (image == null)

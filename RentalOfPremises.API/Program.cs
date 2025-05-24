@@ -1,3 +1,4 @@
+using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using RentalOfPremises.API.Extensions;
@@ -29,7 +30,6 @@ namespace RentalOfPremises.API
             //Добавление конфигураций маппинга Mapster
             builder.Services.RegisterMapsterConfiguration();
 
-            
 
             // Чтение конфигурации из appsettings.json
             builder.Services.Configure<CloudinarySettings>(builder.Configuration.GetSection("Cloudinary"));
@@ -42,6 +42,10 @@ namespace RentalOfPremises.API
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+
+
+            //Добавление FluentValidation
+            builder.Services.AddValidatorsFromAssembly(typeof(Program).Assembly);
 
 
             //DB context
@@ -74,6 +78,9 @@ namespace RentalOfPremises.API
 
             builder.Services.AddSingleton<IImageDeleteQueue, ImageDeleteQueue>();
             builder.Services.AddHostedService<ImageDeleteService>();
+
+            builder.Services.AddSingleton<IFolderDeleteQueue, FolderDeleteQueue>();
+            builder.Services.AddHostedService<FolderDeleteService>();
 
 
 

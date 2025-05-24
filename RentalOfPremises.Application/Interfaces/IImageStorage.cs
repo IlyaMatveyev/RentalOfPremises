@@ -7,13 +7,7 @@ namespace RentalOfPremises.Application.Interfaces
         public Task<string> UploadImage(IFormFile image, string path);
         public Task<bool> DeleteImageByUrl(string imageUrl, Guid userId);
 
-        //методы для Advert:
-
-        //добавить кучу фоток разом (до 50)
-        //удалить всю коллекцию
-
-        //добавить фото в коллекцию
-        //удалить фото из коллекции
+        Task<bool> DeleteFolder(string folderPath); ////////////////
 
         public bool ValidateImageFile(IFormFile image);
     }

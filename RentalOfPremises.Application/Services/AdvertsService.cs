@@ -16,6 +16,7 @@ namespace RentalOfPremises.Application.Services
         private readonly IImageStorage _imageStorage;
         private readonly IImageUploadQueue _imageUploadQueue;
         private readonly IImageDeleteQueue _imageDeleteQueue;
+        private readonly IFolderDeleteQueue _folderDeleteQueue;
         private readonly IMapper _mapper;
         public AdvertsService(
             IAdvertsRepository advertsRepository,
@@ -23,7 +24,8 @@ namespace RentalOfPremises.Application.Services
             ICurrentUserContext currentUserContext, 
             IMapper mapper,
             IImageUploadQueue imageUploadQueue,
-            IImageDeleteQueue imageDeleteQueue)
+            IImageDeleteQueue imageDeleteQueue, 
+            IFolderDeleteQueue folderDeleteQueue)
         {
             _advertsRepository = advertsRepository;
             _imageStorage = imageStorage;
@@ -31,6 +33,7 @@ namespace RentalOfPremises.Application.Services
             _mapper = mapper;
             _imageUploadQueue = imageUploadQueue;
             _imageDeleteQueue = imageDeleteQueue;
+            _folderDeleteQueue = folderDeleteQueue;
         }
 
         public async Task<Guid> Create(Advert advert)
@@ -83,11 +86,45 @@ namespace RentalOfPremises.Application.Services
             };
         }
 
-        public Task<int> Delete(Guid advertId)
+        public async Task<int> Delete(Guid advertId)
         {
-            //TODO: Прописать удаление всех фоток из облака
-            return _advertsRepository.Delete(advertId);
+            var advert = await _advertsRepository.ReadById(advertId, _currentUserContext.UserId);
+
+            //взять все imageUrl и записать их в очередь на удаление
+            var imageUrlCollection = new List<ImageInAdvert>();
+
+            if(advert.ListImageUrl != null || advert.ListImageUrl.Count > 0)
+            {
+                imageUrlCollection.AddRange(advert.ListImageUrl);
+            }
+            if (!string.IsNullOrEmpty(advert.MainImageUrl))
+            {
+                await _imageStorage.DeleteImageByUrl(advert.MainImageUrl, _currentUserContext.UserId);
+            }
+            
+            if(imageUrlCollection != null || imageUrlCollection.Count > 0)
+            {
+                //генерируем такски на удаление всех фото
+                foreach(var imageUrl in imageUrlCollection)
+                {
+                    _imageDeleteQueue.AddTask(
+                        new() { 
+                            AdvertId = advert.Id, 
+                            ImageUrl = imageUrl.ImageUrl, 
+                            UserId = _currentUserContext.UserId 
+                        });
+                }
+            }
+
+            //Помещаем задачу на удаление дериктории
+            _folderDeleteQueue.AddTask(new()
+            {
+                Path = $"{_currentUserContext.UserId}/Adverts/{advertId}"
+            });
+
+            return await _advertsRepository.Delete(advertId);
         }
+
 
         public async Task<Guid> PublishUnpublish(Guid advertId)
         {
@@ -178,7 +215,7 @@ namespace RentalOfPremises.Application.Services
             }
 
             //проверка: принадлежит ли этот Advert пользователю
-            var advert = await _advertsRepository.ReadById(advertId);
+            var advert = await _advertsRepository.ReadById(advertId, _currentUserContext.UserId);
             if (advert.OwnerId == _currentUserContext.UserId)
             {
                 //Генерируем таски для бекграунд сервиса
