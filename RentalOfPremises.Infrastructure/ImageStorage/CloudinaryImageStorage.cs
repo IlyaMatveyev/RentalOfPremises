@@ -30,17 +30,6 @@ namespace RentalOfPremises.Infrastructure.ImageStorage
 
         public async Task<string> UploadImage(IFormFile image, string path)
         {
-            /*using var stream = image.OpenReadStream();
-            var uploadParams = new ImageUploadParams
-            {
-                Folder = path,
-                File = new FileDescription(path, stream),
-                Overwrite = true
-            };
-
-            var uploadResult = await _cloudinary.UploadAsync(uploadParams);
-            return uploadResult.SecureUrl.ToString();*/
-
             await using var memoryStream = new MemoryStream(); // Создаём поток в памяти
             await image.CopyToAsync(memoryStream);             // Копируем содержимое IFormFile в MemoryStream
             memoryStream.Seek(0, SeekOrigin.Begin);            // Перемещаем указатель потока в начало (сместить указатель на 0 байтов от начала потока)
@@ -54,6 +43,30 @@ namespace RentalOfPremises.Infrastructure.ImageStorage
 
             var uploadResult = await _cloudinary.UploadAsync(uploadParams); // Выполняем загрузку
             return uploadResult.SecureUrl.ToString();
+        }
+
+		/// <summary>
+		/// Загружает в облако файл представленный массивом байтов. 
+        /// Нужен в backgroud сервисе, так как IFormFile уничтожается с завершением http-запроса.
+		/// </summary>
+		/// <param name="fileBytes">Массив байтов файла.</param>
+		/// <param name="path">Путь в облаке.</param>
+		/// <returns>Url загруженного изображения.</returns>
+		public async Task<string> UploadFileBytes(byte[] fileBytes, string path)
+        {
+            using var memoryStream = new MemoryStream(fileBytes);
+			memoryStream.Seek(0, SeekOrigin.Begin);
+
+			var uploadParams = new ImageUploadParams
+            {
+                Folder = path,
+                File = new FileDescription(path, memoryStream),
+                Overwrite = true
+            };
+
+            var uploadResult = await _cloudinary.UploadAsync(uploadParams);
+            return uploadResult?.SecureUrl?.ToString();
+
         }
 
         public async Task<bool> DeleteImageByUrl(string imageUrl, Guid userId)

@@ -41,7 +41,7 @@ namespace RentalOfPremises.Infrastructure.BackgroundServices
                             var imagesInAdvertRepository = scope.ServiceProvider.GetRequiredService<IImagesInAdvertRepository>();
                             var imageStorage = scope.ServiceProvider.GetRequiredService<IImageStorage>();
 
-                            var url = await imageStorage.UploadImage(task.ImageFile, task.PathInCloud);
+                            var url = await imageStorage.UploadFileBytes(task.FileBytes, task.PathInCloud);
                             await imagesInAdvertRepository.Add(task.AdvertId, url);
                         }
                     }

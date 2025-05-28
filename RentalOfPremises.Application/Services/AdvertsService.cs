@@ -216,15 +216,21 @@ namespace RentalOfPremises.Application.Services
 
             //проверка: принадлежит ли этот Advert пользователю
             var advert = await _advertsRepository.ReadById(advertId, _currentUserContext.UserId);
+
             if (advert.OwnerId == _currentUserContext.UserId)
             {
+
                 //Генерируем таски для бекграунд сервиса
                 foreach (var image in imageCollectionRequest.Images)
                 {
+                    using var memoryStream = new MemoryStream();
+                    await image.CopyToAsync(memoryStream);
+                    var fileBytes = memoryStream.ToArray();
+
                     _imageUploadQueue.AddTask(
                         new() { 
                         AdvertId = advertId, 
-                        ImageFile = image, 
+                        FileBytes = fileBytes, 
                         PathInCloud = $"{_currentUserContext.UserId}/Adverts/{advertId}" 
                         });
                 }
