@@ -69,6 +69,9 @@ namespace RentalOfPremises.API
             builder.Services.AddScoped<IAdvertsService, AdvertsService>();
             builder.Services.AddScoped<IAdvertsRepository, AdvertsRepository>();
 
+            builder.Services.AddScoped<IResponsesService, ResponsesService>();
+            builder.Services.AddScoped<IResponsesRepository, ResponsesRepository>();
+
             builder.Services.AddScoped<IImagesInAdvertRepository, ImagesInAdvertRepository>();
 
 
